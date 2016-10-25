@@ -41,6 +41,26 @@ for i in range(num_rounds):
     random.shuffle(wire_states)
     print '         {} {} {}'.format(wire_states[0][0], wire_states[1][0], wire_states[2][0])
 
+    # Populate the possible hints
+    for index, state in enumerate(wire_states):
+        if state == 'good':
+            good_wire = colors[index]
+        elif state == 'dead':
+            dead_wire = colors[index]
+        else:
+            bad_wire = colors[index]
+    spy_hint = '{} wire is bad'.format(wire_colors[bad_wire])
+    informed_hints = [
+        '{} wire is good'.format(wire_colors[good_wire]),
+        '{} wire is dead'.format(wire_colors[dead_wire])
+    ]
+    misinformed_hints = [
+        '{} wire is good'.format(wire_colors[dead_wire]),
+        '{} wire is good'.format(wire_colors[bad_wire]),
+        '{} wire is dead'.format(wire_colors[good_wire]),
+        '{} wire is dead'.format(wire_colors[bad_wire])
+    ]
+
     # Round roles:
     #  1   Defuser
     #  0-1 Spies
@@ -61,8 +81,10 @@ for i in range(num_rounds):
         informants.append(defuser)
 
     for inf in round_informants:
-        print '  {} is informed'.format(inf)
+        print '  {} is informed, thinks the {}'.format(inf, random.choice(informed_hints))
     for minf in round_misinformed:
-        print '  {} is misinformed'.format(minf)
+        print '  {} is misinformed, thinks the {}'.format(minf, random.choice(misinformed_hints))
+    for s in round_spies:
+        print '  {} is the spy, knows the {}'.format(s, spy_hint)
     sys.stdin.readline()
 
