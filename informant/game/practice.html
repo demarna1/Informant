@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" content="initial-scale=1">
+    <link rel="stylesheet" href="index.css">
+    <title>Practice</title>
+  </head>
+  <body>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="three.min.js"></script>
+    <script src="/game.js"></script>
+    <script>
+      var camera, scene, renderer;
+
+      init();
+
+      function init() {
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.y = -450;
+        camera.position.z = 400;
+        camera.rotation.x = 0.75;
+
+        scene = new THREE.Scene();
+        var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshNormalMaterial());
+        scene.add(plane);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>

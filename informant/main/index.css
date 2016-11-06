@@ -1,0 +1,17 @@
+#informant-desktop {
+    width: 300px;
+    height: 40px;
+}
+
+#informant-mobile {
+    width: 300px;
+    height: 40px;
+}
+
+#container {
+    text-align: center;
+}
+
+#title-container {
+    text-align: left;
+}
