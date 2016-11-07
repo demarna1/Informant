@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, input {
+  font-family:
+    "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Lucida Grande",
+    sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  text-align: center;
+}
+
+.title {
+  font-size: 200%;
+  color: #fff;
+  font-weight: 100;
+  margin: 30px;
+}
+
+.subtitle {
+  font-size: 150%;
+  color: #fff;
+  font-weight: 100;
+  margin: 20px;
+}
+
+.button {
+  color: #fff;
+  background: #000;
+  padding: 10px 20px 10px 20px;
+  border: solid #fff 2px;
+  font-size: 150%;
+}
+
+.button:hover {
+  background: #3cb0fd;
+}
+
+.button:disabled {
+  color: #AAA;
+  background: #444;
+}
+

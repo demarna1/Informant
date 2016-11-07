@@ -13,10 +13,10 @@ app.use(express.static(__dirname + '/informant/game'));
 app.get('/informant', function(req, res) {
     res.sendFile(path.resolve('informant/game/practice.html'));
 });
-//app.use(express.static(__dirname + '/cah/game'));
-//app.get('/cah', function(req, res) {
-    //res.sendFile(path.resolve('cah/game/game.html'));
-//});
+app.use(express.static(__dirname + '/cah/game'));
+app.get('/cah', function(req, res) {
+    res.sendFile(path.resolve('cah/game/game.html'));
+});
 
 // Start server
 var nodePort = process.env.PORT || 3000;
@@ -26,6 +26,6 @@ nodeServer.listen(nodePort, function() {
 
 // Create socket.io server for each game
 var infServer = require('./informant/inf_server.js');
-//var cahServer = require('./cah/cah_server.js');
+var cahServer = require('./cah/cah_server.js');
 infServer.socketServer(app, nodeServer);
-//cahServer.socketServer(app, nodeServer);
+cahServer.socketServer(app, nodeServer);

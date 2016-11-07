@@ -1,0 +1,121 @@
+ul {
+  list-style: none;
+  word-wrap: break-word;
+}
+
+.header {
+  padding: 5px;
+  background-color: #ccc;
+  overflow: hidden;
+  display: none;
+}
+
+.headerLeft {
+  float: left;
+  padding: 5px;
+  font-weight: 600;
+  width: 100px;
+}
+
+.home {
+  color: inherit;
+}
+
+.headerCenter {
+  padding: 5px;
+  font-weight: 600;
+}
+
+.headerRight {
+  float: right;
+  width: 100px;
+}
+
+.unlockIcon, .homeIcon {
+  vertical-align: middle;
+}
+
+.code {
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.pages {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.page {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.tradLogo {
+  margin: 20px;
+}
+
+.lobby.page, .question.page, .vote.page, .result.page, .score.page, .over.page {
+  display: none;
+  text-align: center;
+  margin: auto;
+}
+
+.label, .lobbyPlayer, .answeredPlayer {
+  color: #fff;
+  font-weight: 100;
+}
+
+.gameCode {
+  margin-top: 15px;
+}
+
+.bodyCode {
+  color: #fff;
+}
+
+.lobbyList, .answeredList, .submittedList, .votedList {
+  margin: 15px;
+}
+
+.lobbyPlayer, .answeredPlayer, .questionLabel .label {
+  font-size: 150%;
+}
+
+.startButton {
+  margin: 10px;
+}
+
+.questionLabel {
+  margin-top: 15px;
+}
+
+.cardButton {
+  color: #000;
+  background: #fff;
+  padding: 10px 20px 10px 20px;
+  margin: 3px;
+}
+
+td {
+  text-align: center;
+}
+
+.resultTable, .scoreTable {
+  margin: 15px auto 0 auto;
+}
+
+.colHeadTr {
+  color: #fff;
+}
+
+tbody td {
+  font-size: 150%;
+}
+
+.scoreTable tbody td {
+  padding: 7px;
+}
+
