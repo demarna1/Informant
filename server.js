@@ -24,8 +24,9 @@ nodeServer.listen(nodePort, function() {
     console.log('Node.js server listening on port ' + nodePort);
 });
 
-// Create socket.io server for each game
+// Create socket.io servers for each game
+var io = require('socket.io')(nodeServer);
 var infServer = require('./informant/inf_server.js');
 var cahServer = require('./cah/cah_server.js');
-infServer.socketServer(app, nodeServer);
-cahServer.socketServer(app, nodeServer);
+infServer.addListener(io);
+cahServer.addListener(io);
