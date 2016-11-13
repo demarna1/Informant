@@ -8,7 +8,20 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     $(document).ready(function() {
-        $("#joinButton").click(function() {
+        $('#gameCode').focus(function() {
+            $('#gameCode').val('');
+        });
+        $('#name').focus(function() {
+            $('#name').val('');
+        });
+        $('#joinButton').click(function() {
+            if ($('#gameCode').val().length != 4) {
+                alert('Please enter 4-letter game code');
+            } else if ($('#name').val().length == 0) {
+                alert('Please enter your name');
+            } else {
+                alert('Success');
+            }
         });
     });
   </script>
@@ -26,9 +39,7 @@
         </div>
       </div>
       <div id="mobileFormBlock">
-        <div>
-          <input type="button" id="joinButton" value="Join"/>
-        </div>
+        <input type="button" id="joinButton" value="Join"/>
       </div>
     </div>
   </div>
