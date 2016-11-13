@@ -1,17 +1,75 @@
-#desktop {
-    width: 300px;
-    height: 40px;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-#mobile {
-    width: 300px;
-    height: 40px;
+html, input {
+    font-family:
+      "HelveticaNeue-Light",
+      "Helvetica Neue Light",
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      "Lucida Grande",
+      sans-serif;
 }
 
-#container {
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color: #D8D8D8;
     text-align: center;
 }
 
-#title-container {
-    text-align: left;
+h3 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #283870;
+    font-size: 125%;
+}
+
+#mobileFormBlock {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+#gameCode, #name {
+    background-color: #f8f8f8;
+    border: 2px inset;
+    border-radius: 6px;
+    outline: none;
+    padding: 7px;
+    margin-top: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+    text-align: center;
+    font-size: 125%;
+}
+
+#gameCode {
+    text-transform: uppercase;
+}
+
+#joinButton, #newButton {
+    font-size: 140%;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 6px;
+    background-color: #283870;
+    background-image: -webkit-linear-gradient(bottom, #283870 0%, #485890 100%);
+    background-image: -moz-linear-gradient(bottom, #283870 0%, #485890 100%);
+    background-image: -o-linear-gradient(bottom, #283870 0%, #485890 100%);
+    background-image: -ms-linear-gradient(bottom, #283870 0%, #485890 100%);
+    background-image: linear-gradient(bottom, #283870 0%, #485890 100%);
+}
+
+#joinButton {
+    width: 100px;
+    height: 80px;
+}
+
+#newButton {
+    width: 200px;
+    height: 50px;
 }

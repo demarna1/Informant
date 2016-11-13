@@ -1,22 +1,43 @@
 <html>
 <head>
+  <title>Home</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width" content="initial-scale=1">
   <link rel="stylesheet" href="index.css">
-  <title>Home</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    $(document).ready(function() {
+        $("#joinButton").click(function() {
+        });
+    });
+  </script>
 </head>
 <body>
-  <div id="container">
-    <div id="title-container">
-      <h3>Informant</h3>
+  <div>
+    <h3>Join Game (Mobile)</h3>
+    <div>
+      <div id="mobileFormBlock">
+        <div>
+          <input type="text" id="gameCode" placeholder="4-letter code" maxlength="4" size="14"/>
+        </div>
+        <div>
+          <input type="text" id="name" placeholder="ENTER NAME" maxlength="12" size="14"/>
+        </div>
+      </div>
+      <div id="mobileFormBlock">
+        <div>
+          <input type="button" id="joinButton" value="Join"/>
+        </div>
+      </div>
     </div>
-    <input type="button" id="desktop" value="New Game" onclick="location.href='/informant'"/>
-    <input type="button" id="mobile" value="Join Game" onclick="location.href='/informant'"/>
-    <div id="title-container">
-      <h3>Cards Against Humanity</h3>
-    </div>
-    <input type="button" id="desktop" value="New Game" onclick="location.href='/cah'"/>
-    <input type="button" id="mobile" value="Join Game" onclick="location.href='/cah'"/>
+  </div>
+  <div>
+    <h3>Create New Game (TV)</h3>
+    <h4>Informant</h4>
+    <input type="button" id="newButton" value="New Game" onclick="location.href='/informant'"/>
+    <h4>Cards Against Humanity</h4>
+    <input type="button" id="newButton" value="New Game" onclick="location.href='/cah'"/>
   </div>
 </body>
 </html>
