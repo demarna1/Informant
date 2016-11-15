@@ -7,7 +7,6 @@ ul {
   padding: 5px;
   background-color: #ccc;
   overflow: hidden;
-  display: none;
 }
 
 .headerLeft {
@@ -57,7 +56,7 @@ ul {
   margin: 20px;
 }
 
-.lobby.page, .question.page, .vote.page, .result.page, .score.page, .over.page {
+.question.page, .vote.page, .result.page, .score.page, .over.page {
   display: none;
   text-align: center;
   margin: auto;
