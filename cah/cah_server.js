@@ -1,8 +1,8 @@
 // Cards Against Humanity game server
+exports.games = [];
 exports.addListener = function(io) {
     var infNamespace = io.of('/cah');
     infNamespace.on('connection', function(socket) {
-        console.log('new CAH connection');
         socket.emit('connected');
 
         function generateGameCode() {
@@ -16,7 +16,8 @@ exports.addListener = function(io) {
 
         socket.on('new game', function() {
             var gameCode = generateGameCode();
-            console.log('New CAH game with game code = ' + gameCode);
+            exports.games.push(gameCode);
+            console.log('Created CAH game room #' + gameCode);
             socket.emit('code created', {
                 gameCode: gameCode
             });

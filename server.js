@@ -30,3 +30,16 @@ var infServer = require('./informant/inf_server.js');
 var cahServer = require('./cah/cah_server.js');
 infServer.addListener(io);
 cahServer.addListener(io);
+app.get('/play', function(req, res) {
+    gameCode = req.query.gameCode;
+    name = req.query.name;
+    if (cahServer.games.indexOf(gameCode) > -1) {
+        console.log(name + ' has joined CAH #' + gameCode);
+        res.json({'status': 'success'});
+    } else if (infServer.games.indexOf(gameCode) > -1) {
+        console.log(name + ' has joined Informant #' + gameCode);
+        res.json({'status': 'success'});
+    } else {
+        res.json({'status': 'error'});
+    }
+});

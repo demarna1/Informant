@@ -6,25 +6,7 @@
   <link rel="stylesheet" href="index.css">
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    $(document).ready(function() {
-        $('#gameCode').focus(function() {
-            $('#gameCode').val('');
-        });
-        $('#name').focus(function() {
-            $('#name').val('');
-        });
-        $('#joinButton').click(function() {
-            if ($('#gameCode').val().length != 4) {
-                alert('Please enter 4-letter game code');
-            } else if ($('#name').val().length == 0) {
-                alert('Please enter your name');
-            } else {
-                alert('Success');
-            }
-        });
-    });
-  </script>
+  <script src="/index.js"></script>
 </head>
 <body>
   <div>
