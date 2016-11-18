@@ -1,0 +1,35 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width" content="initial-scale=1">
+  <title>Cards Against Humanity</title>
+  <link rel="stylesheet" href="common-dark.css">
+  <link rel="stylesheet" href="play.css">
+</head>
+<body>
+  <ul class="pages">
+    <li class="wait page">
+      <h3 class="title">Cards Against Humanity</h3>
+      <div class="welcomeLabel">
+        <label class="label">Welcome Label</label>
+      </div>
+      <div class="waitingLabel">
+        <label class="label">Waiting Label</label>
+      </div>
+    </li>
+    <li class="card page">
+      <h3 class="title">Pick your response</h3>
+      <ul class="cardList">
+      </ul>
+    </li>
+    <li class="vote page">
+      <h3 class="title">Pick your favorite</h3>
+      <ul class="voteList">
+      </ul>
+    </li>
+  </ul>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/play.js"></script>
+</body>
+</html>

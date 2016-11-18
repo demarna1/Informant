@@ -6,7 +6,7 @@ $(function() {
         $('#name').val('');
     });
     $('#joinButton').click(function() {
-        var gameCode = $('#gameCode').val();
+        var gameCode = $('#gameCode').val().toUpperCase();
         var name = $('#name').val();
         if (gameCode.length != 4) {
             alert('Please enter 4-letter game code');
@@ -15,12 +15,12 @@ $(function() {
         } else {
             data = { gameCode: gameCode, name: name };
             $.get('/play', data, function(res) {
-                if (res.status == 'success') {
-                    alert('Joined successfully');
-                } else if (res.status == 'error') {
-                    alert('Invalid room code: ' + gameCode);
+                if (res.result == 'success') {
+                    var url = res.url + '?gameCode=' +
+                        gameCode + '&name=' + name;
+                    location.href = url;
                 } else {
-                    alert('Unknown response from server');
+                    alert('Invalid room code: ' + gameCode);
                 }
             });
         }

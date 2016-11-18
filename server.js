@@ -5,17 +5,26 @@ var nodeServer = require('http').createServer(app);
 
 // Configure site routes
 var path = require('path');
+app.get('/favicon.ico', function(req, res) {
+    res.sendFile(path.resolve('main/favicon.ico'));
+});
 app.use(express.static(__dirname + '/main'));
 app.get('/', function(req, res) {
     res.sendFile(path.resolve('main/index.html'));
 });
 app.use(express.static(__dirname + '/informant/game'));
+app.use(express.static(__dirname + '/informant/play'));
 app.get('/informant', function(req, res) {
     res.sendFile(path.resolve('informant/game/practice.html'));
 });
 app.use(express.static(__dirname + '/cah/game'));
+app.use(express.static(__dirname + '/cah/play'));
 app.get('/cah', function(req, res) {
-    res.sendFile(path.resolve('cah/game/game.html'));
+    if (req.query.gameCode && req.query.name) {
+        res.sendFile(path.resolve('cah/play/play.html'));
+    } else {
+        res.sendFile(path.resolve('cah/game/game.html'));
+    }
 });
 
 // Start server
@@ -30,16 +39,21 @@ var infServer = require('./informant/inf_server.js');
 var cahServer = require('./cah/cah_server.js');
 infServer.addListener(io);
 cahServer.addListener(io);
+
+// User login; redirect to proper page
 app.get('/play', function(req, res) {
-    gameCode = req.query.gameCode;
-    name = req.query.name;
+    var gameCode = req.query.gameCode;
+    var name = req.query.name;
     if (cahServer.games.indexOf(gameCode) > -1) {
         console.log(name + ' has joined CAH #' + gameCode);
-        res.json({'status': 'success'});
+        res.json({
+            'result': 'success',
+            'url': '/cah'
+        });
     } else if (infServer.games.indexOf(gameCode) > -1) {
         console.log(name + ' has joined Informant #' + gameCode);
-        res.json({'status': 'success'});
+        res.json({'result': 'error'});
     } else {
-        res.json({'status': 'error'});
+        res.json({'result': 'error'});
     }
 });

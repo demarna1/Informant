@@ -1,0 +1,57 @@
+ul {
+  list-style: none;
+  word-wrap: break-word;
+}
+
+.pages {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.page {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.card.page {
+  display: none;
+  text-align: center;
+  margin: auto;
+}
+
+.vote.page {
+  display: none;
+}
+
+.label {
+  color: #fff;
+  font-weight: 100;
+}
+
+.cardList, .voteList {
+    margin: 10px;
+}
+
+.cardButton {
+  color: #000;
+  background: #fff;
+  padding: 10px 20px 10px 20px;
+  border: solid #000 2px;
+  margin: 3px;
+}
+
+.cardButton:hover {
+  border: solid #3cb0fd 2px;
+}
+
+.cardButtonSelected {
+  color: #fff;
+  background: #3cb0fd;
+  padding: 10px 20px 10px 20px;
+  border: solid #fff 2px;
+  margin: 3px;
+}
+
