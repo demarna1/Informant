@@ -22,5 +22,11 @@ exports.addListener = function(io) {
                 gameCode: gameCode
             });
         });
+
+        socket.on('user joined', function(data) {
+            socket.broadcast.emit('user joined', {
+                username: data.username
+            });
+        });
     });
 };

@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var nodeServer = require('http').createServer(app);
 
-// Configure site routes
+// Configure main site routes
 var path = require('path');
 app.get('/favicon.ico', function(req, res) {
     res.sendFile(path.resolve('main/favicon.ico'));
@@ -12,11 +12,15 @@ app.use(express.static(__dirname + '/main'));
 app.get('/', function(req, res) {
     res.sendFile(path.resolve('main/index.html'));
 });
+
+// Configure Informant routes
 app.use(express.static(__dirname + '/informant/game'));
 app.use(express.static(__dirname + '/informant/play'));
 app.get('/informant', function(req, res) {
     res.sendFile(path.resolve('informant/game/practice.html'));
 });
+
+// Configure Cards Against Humanity routes
 app.use(express.static(__dirname + '/cah/game'));
 app.use(express.static(__dirname + '/cah/play'));
 app.get('/cah', function(req, res) {
@@ -40,7 +44,7 @@ var cahServer = require('./cah/cah_server.js');
 infServer.addListener(io);
 cahServer.addListener(io);
 
-// User login; redirect to proper page
+// Redirect to proper page on user login
 app.get('/play', function(req, res) {
     var gameCode = req.query.gameCode;
     var name = req.query.name;

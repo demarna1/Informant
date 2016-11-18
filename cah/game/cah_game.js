@@ -16,4 +16,9 @@ $(function() {
         $gameCode.text(state.gameCode);
         $lobbyList.empty();
     });
+
+    socket.on('user joined', function(data) {
+        state.addUser(data.username);
+        console.log(data.username + ' joined, numPlayers = ' + state.players.length);
+    });
 });
