@@ -1,9 +1,9 @@
 <html>
 <head>
   <title>Home</title>
-  <!--<meta charset="UTF-8">-->
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="index2.css">
+  <link rel="stylesheet" href="index.css">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
@@ -11,32 +11,43 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/index.js"></script>
 </head>
-<body>
-<header class="jumbotron site-header">
-  <div class="container text-center">
-    <h1>Socket.io Games</h1>
+<body class="site-body">
+  <header class="jumbotron site-header">
+    <div class="container text-center">
+      <h1>Socket.io Games</h1>
+    </div>
+  </header>
+  <div class="site-body-join">
+    <div class="container text-center">
+      <div class="field form-group">
+        <h3><span class="glyphicon glyphicon-phone"></span> Join Game</h3>
+      </div>
+      <div class="field form-group col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <input class="form-control" type="text" id="gameCode" placeholder="4-LETTER CODE" maxlength="4"/>
+      </div>
+      <div class="field form-group col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <input class="form-control" type="text" id="name" placeholder="ENTER YOUR NAME" maxlength="12"/>
+      </div>
+      <div class="field form-group col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <input class="btn btn-primary btn-block" type="button" id="joinButton" value="Join"/>
+      </div>
+    </div>
   </div>
-</header>
-<div class="container text-center">
-  <div class="field form-group">
-    <h3><span class="glyphicon glyphicon-phone"></span> Join Game</h3>
+  <div class="site-body-games">
+    <div class="container text-center">
+      <h3><span class="glyphicon glyphicon-blackboard"></span> Create Game</h3>
+      <h4>Informant</h4>
+      <input class="btn btn-primary btn-lg" type="button" id="newButton"
+          value="New Game" onclick="location.href='/informant'"/>
+      <h4>Cards Against Humanity</h4>
+      <input class="btn btn-primary btn-lg" type="button" id="newButton"
+          value="New Game" onclick="location.href='/cah'"/>
+    </div>
   </div>
-  <div class="field form-group">
-    <input class="form-control" type="text" id="gameCode" placeholder="4-letter code" maxlength="4"/>
-  </div>
-  <div class="field form-group">
-    <input class="form-control" type="text" id="name" placeholder="ENTER NAME" maxlength="12"/>
-  </div>
-  <div class="field form-group">
-    <input class="btn btn-primary btn-block" type="button" id="joinButton" value="Join"/>
-  </div>
-</div>
-<div class="container text-center">
-  <h3><span class="glyphicon glyphicon-blackboard"></span> Create Game</h3>
-  <h4>Informant</h4>
-  <input class="btn btn-primary" type="button" id="newButton" value="New Game" onclick="location.href='/informant'"/>
-  <h4>Cards Against Humanity</h4>
-  <input class="btn btn-primary" type="button" id="newButton" value="New Game" onclick="location.href='/cah'"/>
-</div>
+  <footer class="footer">
+    <div class="container text-center footer-text">
+      <span class="glyphicon glyphicon-copyright-mark"></span> 2016
+    </div>
+  </footer>
 </body>
 </html>
