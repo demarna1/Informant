@@ -1,36 +1,42 @@
 <html>
 <head>
   <title>Home</title>
-  <meta charset="UTF-8">
+  <!--<meta charset="UTF-8">-->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="index2.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/index.js"></script>
 </head>
 <body>
-  <div>
-    <h3>Join Game (Mobile)</h3>
-    <div>
-      <div id="mobileFormBlock">
-        <div>
-          <input type="text" id="gameCode" placeholder="4-letter code" maxlength="4" size="14"/>
-        </div>
-        <div>
-          <input type="text" id="name" placeholder="ENTER NAME" maxlength="12" size="14"/>
-        </div>
-      </div>
-      <div id="mobileFormBlock">
-        <input type="button" id="joinButton" value="Join"/>
-      </div>
-    </div>
+<header class="jumbotron site-header">
+  <div class="container text-center">
+    <h1>Socket.io Games</h1>
   </div>
-  <div>
-    <h3>Create New Game (TV)</h3>
-    <h4>Informant</h4>
-    <input type="button" id="newButton" value="New Game" onclick="location.href='/informant'"/>
-    <h4>Cards Against Humanity</h4>
-    <input type="button" id="newButton" value="New Game" onclick="location.href='/cah'"/>
+</header>
+<div class="container text-center">
+  <div class="field form-group">
+    <h3><span class="glyphicon glyphicon-phone"></span> Join Game</h3>
   </div>
+  <div class="field form-group">
+    <input class="form-control" type="text" id="gameCode" placeholder="4-letter code" maxlength="4"/>
+  </div>
+  <div class="field form-group">
+    <input class="form-control" type="text" id="name" placeholder="ENTER NAME" maxlength="12"/>
+  </div>
+  <div class="field form-group">
+    <input class="btn btn-primary btn-block" type="button" id="joinButton" value="Join"/>
+  </div>
+</div>
+<div class="container text-center">
+  <h3><span class="glyphicon glyphicon-blackboard"></span> Create Game</h3>
+  <h4>Informant</h4>
+  <input class="btn btn-primary" type="button" id="newButton" value="New Game" onclick="location.href='/informant'"/>
+  <h4>Cards Against Humanity</h4>
+  <input class="btn btn-primary" type="button" id="newButton" value="New Game" onclick="location.href='/cah'"/>
+</div>
 </body>
 </html>
