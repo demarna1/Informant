@@ -1,4 +1,8 @@
 $(function() {
+    // Pages
+    var $lobbyPage = $('.lobby.page');
+    var $currentPage = $lobbyPage;
+
     // Other jQuery elements
     var $gameCode = $('.code');
     var $lobbyList = $('.lobbyList');
@@ -8,6 +12,13 @@ $(function() {
     // State variables
     var socket = io('/cah');
     var state = null;
+
+    function transitionTo($nextPage) {
+        if ($currentPage == $nextPage) return;
+        $currentPage.fadeOut();
+        $nextPage.delay(400).fadeIn();
+        $currentPage = $nextPage;
+    }
 
     function updateLobby() {
         $lobbyList.empty();
@@ -23,7 +34,7 @@ $(function() {
         }
     }
 
-    socket.on('connected', function() {
+    socket.on('connect', function() {
         socket.emit('new game');
     });
 
@@ -37,5 +48,15 @@ $(function() {
         state.addUser(data.username);
         console.log(data.username + ' joined, numPlayers = ' + state.players.length);
         updateLobby();
+    });
+
+    socket.on('user left', function(data) {
+        state.removeUser(data.username);
+        console.log(data.username + ' left, numPlayers = ' + state.players.length);
+        updateLobby();
+        if (state.players.length < 2) {
+            state.restart();
+            transitionTo($lobbyPage);
+        }
     });
 });

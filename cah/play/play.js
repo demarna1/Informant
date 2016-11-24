@@ -18,7 +18,7 @@ $(function() {
         }
     };
 
-    socket.on('connected', function() {
+    socket.on('connect', function() {
         username = getUrlParameter('name');
         socket.emit('user joined', {
             gameCode: getUrlParameter('gameCode'),
