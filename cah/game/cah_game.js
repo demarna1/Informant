@@ -45,14 +45,14 @@ $(function() {
     });
 
     socket.on('user joined', function(data) {
-        state.addUser(data.username);
+        state.addUser(data.userid, data.username);
         console.log(data.username + ' joined, numPlayers = ' + state.players.length);
         updateLobby();
     });
 
     socket.on('user left', function(data) {
-        state.removeUser(data.username);
-        console.log(data.username + ' left, numPlayers = ' + state.players.length);
+        state.removeUser(data.userid);
+        console.log('player left, numPlayers = ' + state.players.length);
         updateLobby();
         if (state.players.length < 2) {
             state.restart();

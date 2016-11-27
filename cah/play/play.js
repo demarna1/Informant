@@ -20,7 +20,7 @@ $(function() {
 
     socket.on('connect', function() {
         username = getUrlParameter('name');
-        socket.emit('user joined', {
+        socket.emit('new user', {
             gameCode: getUrlParameter('gameCode'),
             username: username
         });

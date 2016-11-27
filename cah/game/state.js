@@ -38,8 +38,9 @@ State.prototype.newRound = function() {
 /*
  * Add a new player.
  */
-State.prototype.addUser = function(username) {
+State.prototype.addUser = function(userid, username) {
     this.players.push({
+        userid: userid,
         username: username,
         score: 0
     });
@@ -48,10 +49,10 @@ State.prototype.addUser = function(username) {
 /*
  * Remove a player.
  */
-State.prototype.removeUser = function(username) {
+State.prototype.removeUser = function(userid) {
     var indexToRemove = -1;
     for (var i = 0; i < this.players.length; i++) {
-        if (this.players[i].username === username) {
+        if (this.players[i].userid === userid) {
             indexToRemove = i;
         }
     }

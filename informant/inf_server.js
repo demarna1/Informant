@@ -1,5 +1,5 @@
 // Informant game server
-exports.games = [];
+exports.rooms = {};
 exports.addListener = function(io) {
     var infNamespace = io.of('/informant');
     infNamespace.on('connection', function(socket) {

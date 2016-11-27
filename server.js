@@ -48,13 +48,13 @@ cahServer.addListener(io);
 app.get('/play', function(req, res) {
     var gameCode = req.query.gameCode;
     var name = req.query.name;
-    if (cahServer.games.indexOf(gameCode) > -1) {
+    if (gameCode in cahServer.rooms) {
         console.log(name + ' has joined CAH #' + gameCode);
         res.json({
             'result': 'success',
             'url': '/cah'
         });
-    } else if (infServer.games.indexOf(gameCode) > -1) {
+    } else if (gameCode in infServer.rooms) {
         console.log(name + ' has joined Informant #' + gameCode);
         res.json({'result': 'error'});
     } else {
