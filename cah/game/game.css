@@ -27,11 +27,8 @@ ul {
 
 .headerRight {
   float: right;
+  padding: 5px;
   width: 100px;
-}
-
-.unlockIcon, .homeIcon {
-  vertical-align: middle;
 }
 
 .code {

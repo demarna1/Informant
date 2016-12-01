@@ -1,9 +1,11 @@
 <html>
 <head>
-  <meta charset="UTF-8">
   <title>Cards Against Humanity</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="common-dark.css">
   <link rel="stylesheet" href="game.css">
+  <script src="https://use.fontawesome.com/7460fc648f.js"></script>
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/cah_game.js"></script>
@@ -12,13 +14,14 @@
 <body>
   <div class="header">
     <div class="headerLeft">
-      <a class="home" href="/">Home</a>
+      <i class="fa fa-home" aria-hidden="true"></i>
+      <a class="home" href="/"> Home</a>
     </div>
     <div class="headerRight">
-      <img class="unlockIcon" src="/unlock.png" width="25px" height="25px"/>
+      <i class="fa fa-unlock-alt" aria-hidden="true"></i>
       <label class="code">?</label>
     </div>
-    <div class="headerCenter">Cards Against Humanity - Traditional</div>
+    <div class="headerCenter">Cards Against Humanity</div>
   </div>
   <ul class="pages">
     <li class="lobby page">
