@@ -16,11 +16,13 @@ exports.cleanup = function(gameCode) {
 };
 
 exports.blackCard = function(gameCode) {
-    // TODO
-    return "House";
+    if (cardMemory[gameCode].blackCards.length == 0) {
+        cardMemory[gameCode].blackCards = cardJson.blackCards.slice();
+    }
+    var rindex = Math.floor(Math.random()*cardMemory[gameCode].blackCards.length);
+    return cardMemory[gameCode].blackCards.splice(rindex, 1)[0];
 };
 
 exports.whiteCard = function(gameCode) {
     // TODO
-    return "esuoH";
 };

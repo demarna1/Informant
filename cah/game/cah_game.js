@@ -1,6 +1,7 @@
 $(function() {
     // Pages
     var $lobbyPage = $('.lobby.page');
+    var $questionPage = $('.question.page');
     var $currentPage = $lobbyPage;
 
     // Other jQuery elements
@@ -9,6 +10,10 @@ $(function() {
     var $readyLabel = $('.readyLabel .label');
     var $tradButton = $('.tradButton .button');
     var $koButton = $('.koButton .button');
+    var $questionRound = $('.question.page .title');
+    var $questionLabel = $('.questionLabel .label');
+    var $answeredList = $('.answeredList');
+    var $roundTimer = $('.roundTimer');
 
     // State variables
     var socket = io('/cah');
@@ -35,6 +40,33 @@ $(function() {
             $tradButton.attr('disabled', 'disabled');
             $koButton.attr('disabled', 'disabled');
         }
+    }
+
+    function startTimer($timer, duration, $triggerPage, triggerCallback) {
+        if (typeof startTimer.currentId == 'undefined') {
+            startTimer.currentId = 0;
+        }
+        if (startTimer.currentId > 0) {
+            clearInterval(startTimer.currentId);
+            startTimer.currentId = 0;
+        }
+        var timeLeft = duration;
+        $timer.text(timeLeft);
+        startTimer.currentId = setInterval(function() {
+            if (--timeLeft < 0) {
+                clearInterval(startTimer.currentId);
+                startTimer.currentId = 0;
+                if ($currentPage == $triggerPage) {
+                    triggerCallback();
+                }
+                return;
+            }
+            $timer.text(timeLeft);
+        }, 1000);
+    }
+
+    function endRound() {
+        console.log('round over; start voting');
     }
 
     $tradButton.click(function() {
@@ -66,5 +98,14 @@ $(function() {
             state.restart();
             transitionTo($lobbyPage);
         }
+    });
+
+    socket.on('black card', function(data) {
+        state.newRound();
+        $questionRound.text('Round ' + state.round);
+        $questionLabel.text(data.text);
+        $answeredList.empty();
+        transitionTo($questionPage);
+        startTimer($roundTimer, 20 + 10*data.pick, $questionPage, endRound);
     });
 });

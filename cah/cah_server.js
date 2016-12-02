@@ -56,7 +56,7 @@ exports.addListener = function(io) {
         // The host or player has disconnected
         socket.on('disconnect', function(data) {
             if (addedUser) {
-                console.log('CAH user ' + socket.id + ' left room');
+                console.log('CAH player left room');
                 socket.broadcast.to(socket.gameid).emit('user left', {
                     userid: socket.id
                 });
@@ -76,10 +76,14 @@ exports.addListener = function(io) {
         // The host has started the game
         socket.on('start round', function(data) {
             var blackCard = db.blackCard(socket.gameCode);
-            console.log('Display question: ' + blackCard);
+            var pick = (blackCard.match(/_/g) || []).length;
+            if (pick == 0) pick = 1;
             socket.emit('black card', {
-                text: blackCard.text,
-                pick: blackCard.pick
+                text: blackCard,
+                pick: pick
+            });
+            socket.broadcast.to(socket.gameCode).emit('new round', {
+                pick: pick
             });
         });
     });
