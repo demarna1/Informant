@@ -49,8 +49,21 @@ ul {
   width: 100%;
 }
 
-.tradLogo {
-  margin: 20px;
+.flexbox {
+    display: flex;
+}
+
+.tradPanel, .koPanel {
+    margin: auto;
+}
+
+.listPanel {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.tradButton, .koButton {
+    margin: 20px;
 }
 
 .question.page, .vote.page, .result.page, .score.page, .over.page {
@@ -78,10 +91,6 @@ ul {
 
 .lobbyPlayer, .answeredPlayer, .questionLabel .label {
   font-size: 150%;
-}
-
-.startButton {
-  margin: 10px;
 }
 
 .questionLabel {
