@@ -49,13 +49,11 @@ app.get('/play', function(req, res) {
     var gameCode = req.query.gameCode;
     var name = req.query.name;
     if (gameCode in cahServer.rooms) {
-        console.log(name + ' has joined CAH #' + gameCode);
         res.json({
             'result': 'success',
             'url': '/cah'
         });
     } else if (gameCode in infServer.rooms) {
-        console.log(name + ' has joined Informant #' + gameCode);
         res.json({'result': 'error'});
     } else {
         res.json({'result': 'error'});

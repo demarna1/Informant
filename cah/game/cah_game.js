@@ -7,7 +7,8 @@ $(function() {
     var $gameCode = $('.code');
     var $lobbyList = $('.lobbyList');
     var $readyLabel = $('.readyLabel .label');
-    var $startButton = $('.startButton .button');
+    var $tradButton = $('.tradButton .button');
+    var $koButton = $('.koButton .button');
 
     // State variables
     var socket = io('/cah');
@@ -27,12 +28,19 @@ $(function() {
         }
         if (state.players.length >= 2) {
             $readyLabel.text('All players ready?');
-            $startButton.removeAttr('disabled');
+            $tradButton.removeAttr('disabled');
+            //$koButton.removeAttr('disabled'); // TODO - implement knockout
         } else {
             $readyLabel.text('Need ' + (2 - state.players.length) + ' more player(s).');
-            $startButton.attr('disabled', 'disabled');
+            $tradButton.attr('disabled', 'disabled');
+            $koButton.attr('disabled', 'disabled');
         }
     }
+
+    $tradButton.click(function() {
+        state.winningScore = 5 * state.players.length;
+        socket.emit('start round');
+    });
 
     socket.on('connect', function() {
         socket.emit('new game');

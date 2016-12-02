@@ -2,6 +2,7 @@
 exports.rooms = {};
 
 exports.addListener = function(io) {
+    var db = require('./db/db.js');
     var infNamespace = io.of('/cah');
     infNamespace.on('connection', function(socket) {
         var addedUser = false;
@@ -16,21 +17,23 @@ exports.addListener = function(io) {
             return text;
         }
 
+        // The host wants to create a new game
         socket.on('new game', function() {
             addedGame = true;
             var gameCode = generateGameCode();
             exports.rooms[gameCode] = {
                 gameid: socket.id
             };
+            db.setup(gameCode);
             socket.join(gameCode);
-            console.log('created CAH game room #' + gameCode +
-                ' with id = ' + socket.id);
             socket.gameCode = gameCode;
+            console.log('CAH game host ' + gameCode + ' created');
             socket.emit('code created', {
                 gameCode: gameCode
             });
         });
 
+        // The player wants to join a room
         socket.on('new user', function(data) {
             var gameCode = data.gameCode;
             if (!(gameCode in exports.rooms)) {
@@ -40,8 +43,7 @@ exports.addListener = function(io) {
             } else {
                 addedUser = true;
                 socket.join(gameCode);
-                console.log(data.username + ' joined with id ' +
-                    socket.id);
+                console.log('CAH player ' + data.username + ' joined ' + gameCode);
                 var gameid = exports.rooms[gameCode].gameid;
                 socket.gameid = gameid;
                 socket.broadcast.to(gameid).emit('user joined', {
@@ -51,22 +53,34 @@ exports.addListener = function(io) {
             }
         });
 
+        // The host or player has disconnected
         socket.on('disconnect', function(data) {
             if (addedUser) {
-                console.log('user ' + socket.id + ' left room');
+                console.log('CAH user ' + socket.id + ' left room');
                 socket.broadcast.to(socket.gameid).emit('user left', {
                     userid: socket.id
                 });
                 addedUser = false;
             }
             if (addedGame) {
-                /* TODO: remove from exports */
-                console.log('game host with code = ? has disconnected');
+                delete exports.rooms[socket.gameCode];
+                db.cleanup(socket.gameCode);
+                console.log('CAH game host ' + socket.gameCode + ' disconnected');
                 socket.broadcast.to(socket.gameCode).emit('host left', {
                     gameCode: socket.gameCode
                 });
                 addedGame = false;
             }
+        });
+
+        // The host has started the game
+        socket.on('start round', function(data) {
+            var blackCard = db.blackCard(socket.gameCode);
+            console.log('Display question: ' + blackCard);
+            socket.emit('black card', {
+                text: blackCard.text,
+                pick: blackCard.pick
+            });
         });
     });
 };
