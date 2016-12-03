@@ -1,11 +1,18 @@
 $(function() {
+    // Pages
+    var $waitPage = $('.wait.page');
+    var $cardPage = $('.card.page');
+    var $currentPage = $waitPage;
+
     // Other jQuery elements
     var $welcomeLabel = $('.welcomeLabel .label');
     var $waitingLabel = $('.waitingLabel .label');
+    var $cardList = $('.cardList');
 
     // State variables
     var socket = io('/cah');
     var username = '';
+    var cardsToAnswer = 0;
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1));
@@ -18,6 +25,12 @@ $(function() {
         }
     };
 
+    function transitionTo($nextPage) {
+        $currentPage.fadeOut();
+        $nextPage.delay(400).fadeIn();
+        $currentPage = $nextPage;
+    }
+
     socket.on('connect', function() {
         username = getUrlParameter('name');
         socket.emit('new user', {
@@ -26,5 +39,26 @@ $(function() {
         });
         $welcomeLabel.text('Welcome, ' + username + '!');
         $waitingLabel.text('Waiting to start a new game...');
+    });
+
+    socket.on('host left', function(data) {
+        alert('Host from room ' + data.gameCode + ' has disconnected');
+        window.location.replace('/');
+    });
+
+    socket.on('new round', function(data) {
+        cardsToAnswer = data.pick;
+        $('.cardButtonSelected').parent().remove();
+        var cardsToRequest = 10 - $('.cardList li').length;
+        socket.emit('card request', {
+            numCards: cardsToRequest
+        });
+        transitionTo($cardPage);
+    });
+
+    socket.on('white cards', function(data) {
+        for (var i = 0; i < data.whiteCards.length; i++) {
+            $cardList.append('<li class="whiteCard"><button class="cardButton">' + data.whiteCards[i] + '</button></li>');
+        }
     });
 });

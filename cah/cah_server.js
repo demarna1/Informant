@@ -21,9 +21,7 @@ exports.addListener = function(io) {
         socket.on('new game', function() {
             addedGame = true;
             var gameCode = generateGameCode();
-            exports.rooms[gameCode] = {
-                gameid: socket.id
-            };
+            exports.rooms[gameCode] = socket.id;
             db.setup(gameCode);
             socket.join(gameCode);
             socket.gameCode = gameCode;
@@ -44,7 +42,8 @@ exports.addListener = function(io) {
                 addedUser = true;
                 socket.join(gameCode);
                 console.log('CAH player ' + data.username + ' joined ' + gameCode);
-                var gameid = exports.rooms[gameCode].gameid;
+                socket.gameCode = gameCode;
+                var gameid = exports.rooms[gameCode];
                 socket.gameid = gameid;
                 socket.broadcast.to(gameid).emit('user joined', {
                     username: data.username,
@@ -84,6 +83,14 @@ exports.addListener = function(io) {
             });
             socket.broadcast.to(socket.gameCode).emit('new round', {
                 pick: pick
+            });
+        });
+
+        // The player has requested some cards
+        socket.on('card request', function(data) {
+            var whiteCards = db.whiteCards(socket.gameCode, data.numCards);
+            socket.emit('white cards', {
+                whiteCards: whiteCards
             });
         });
     });

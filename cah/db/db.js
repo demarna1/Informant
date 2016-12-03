@@ -23,6 +23,14 @@ exports.blackCard = function(gameCode) {
     return cardMemory[gameCode].blackCards.splice(rindex, 1)[0];
 };
 
-exports.whiteCard = function(gameCode) {
-    // TODO
+exports.whiteCards = function(gameCode, numCards) {
+    var whiteCards = [];
+    if (cardMemory[gameCode].whiteCards.length < numCards) {
+        cardMemory[gameCode].whiteCards = cardJson.whiteCards.slice();
+    }
+    for (var i = 0; i < numCards; i++) {
+        var rindex = Math.floor(Math.random()*cardMemory[gameCode].whiteCards.length);
+        whiteCards.push(cardMemory[gameCode].whiteCards.splice(rindex, 1)[0]);
+    }
+    return whiteCards;
 };
