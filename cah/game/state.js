@@ -61,15 +61,23 @@ State.prototype.removeUser = function(userid) {
     }
 };
 
+State.prototype.getUser = function(userid) {
+    for (var i = 0; i < this.players.length; i++) {
+        if (this.players[i].userid == userid) {
+            return this.players[i];
+        }
+    }
+};
+
 /*
  * Adds a user's response to the list of submissions.
  */
-State.prototype.addUserAnswer = function(user, cardText, done) {
-    if (user in this.submissions) {
-        this.submissions[user].cards += ' / ' + cardText;
-        this.submissions[user].done = done;
+State.prototype.addUserAnswer = function(userid, cardText, done) {
+    if (userid in this.submissions) {
+        this.submissions[userid].cards += ' / ' + cardText;
+        this.submissions[userid].done = done;
     } else {
-        this.submissions[user] = {
+        this.submissions[userid] = {
             done: done,
             cards: cardText
         };
@@ -83,8 +91,8 @@ State.prototype.addUserAnswer = function(user, cardText, done) {
 State.prototype.isRoundOver = function() {
     var allDone = true;
     var count = 0;
-    for (var user in this.submissions) {
-        allDone &= this.submissions[user].done;
+    for (var userid in this.submissions) {
+        allDone &= this.submissions[userid].done;
         count++;
     }
     return allDone && count >= this.players.length;

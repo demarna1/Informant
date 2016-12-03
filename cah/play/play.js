@@ -31,6 +31,26 @@ $(function() {
         $currentPage = $nextPage;
     }
 
+    function registerClicks(message) {
+        $('.cardButton').click(function() {
+            if ($(this).attr('class') != 'cardButton' ||
+                cardsToAnswer <= 0) {
+                return;
+            }
+            var done = (--cardsToAnswer == 0);
+            $(this).attr('class', 'cardButtonSelected');
+            socket.emit(message, {
+                cardText: $(this).text(),
+                done: done
+            });
+            if (done) {
+                $welcomeLabel.text('Response submitted!');
+                $waitingLabel.text('Waiting for other players...');
+                transitionTo($waitPage);
+            }
+        });
+    }
+
     socket.on('connect', function() {
         username = getUrlParameter('name');
         socket.emit('new user', {
@@ -60,5 +80,6 @@ $(function() {
         for (var i = 0; i < data.whiteCards.length; i++) {
             $cardList.append('<li class="whiteCard"><button class="cardButton">' + data.whiteCards[i] + '</button></li>');
         }
+        registerClicks('answer card');
     });
 });

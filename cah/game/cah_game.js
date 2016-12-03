@@ -108,4 +108,15 @@ $(function() {
         transitionTo($questionPage);
         startTimer($roundTimer, 20 + 10*data.pick, $questionPage, endRound);
     });
+
+    socket.on('user answered', function(data) {
+        state.addUserAnswer(data.userid, data.cardText, data.done);
+        if (data.done) {
+            $answeredList.append('<li class="answeredPlayer">' +
+                state.getUser(data.userid).username + '</li>');
+        }
+        if (state.isRoundOver()) {
+            console.log('Round is over');
+        }
+    });
 });

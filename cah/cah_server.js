@@ -93,5 +93,14 @@ exports.addListener = function(io) {
                 whiteCards: whiteCards
             });
         });
+
+        // The client has submitted an answer card
+        socket.on('answer card', function(data) {
+            socket.broadcast.to(socket.gameid).emit('user answered', {
+                userid: socket.id,
+                cardText: data.cardText,
+                done: data.done
+            });
+        });
     });
 };
