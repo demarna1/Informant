@@ -94,13 +94,18 @@ exports.addListener = function(io) {
             });
         });
 
-        // The client has submitted an answer card
+        // The player has submitted an answer card
         socket.on('answer card', function(data) {
             socket.broadcast.to(socket.gameid).emit('user answered', {
                 userid: socket.id,
                 cardText: data.cardText,
                 done: data.done
             });
+        });
+
+        // All players have submitted an answer and voting can start
+        socket.on('round over', function(data) {
+            console.log('round over, all users submitted');
         });
     });
 };

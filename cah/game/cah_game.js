@@ -2,6 +2,7 @@ $(function() {
     // Pages
     var $lobbyPage = $('.lobby.page');
     var $questionPage = $('.question.page');
+    var $votePage = $('.vote.page');
     var $currentPage = $lobbyPage;
 
     // Other jQuery elements
@@ -14,10 +15,25 @@ $(function() {
     var $questionLabel = $('.questionLabel .label');
     var $answeredList = $('.answeredList');
     var $roundTimer = $('.roundTimer');
+    var $submittedList = $('.submittedList');
+    var $voteTimer = $('.voteTimer');
+    var $votedList = $('.votedList');
 
     // State variables
     var socket = io('/cah');
     var state = null;
+
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
+    }
 
     function transitionTo($nextPage) {
         if ($currentPage == $nextPage) return;
@@ -66,7 +82,26 @@ $(function() {
     }
 
     function endRound() {
-        console.log('round over; start voting');
+        var submittedMap = state.startVoting();
+        socket.emit('round over', {
+            submissions: submittedMap
+        });
+        $submittedList.empty();
+        $votedList.empty();
+        var listToDisplay = [];
+        for (var userid in submittedMap) {
+            listToDisplay.push(submittedMap[userid]);
+        }
+        shuffle(listToDisplay);
+        for (var i = 0; i < listToDisplay.length; i++) {
+            $submittedList.append('<li class="whiteCard"><button class="cardButton">' + listToDisplay[i] + '</button></li>');
+        }
+        transitionTo($votePage);
+        startTimer($voteTimer, 25, $votePage, endVoting);
+    }
+
+    function endVoting() {
+        console.log('voting over');
     }
 
     $tradButton.click(function() {
@@ -116,7 +151,7 @@ $(function() {
                 state.getUser(data.userid).username + '</li>');
         }
         if (state.isRoundOver()) {
-            console.log('Round is over');
+            endRound();
         }
     });
 });

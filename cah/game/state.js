@@ -104,12 +104,12 @@ State.prototype.isRoundOver = function() {
  */
 State.prototype.startVoting = function() {
     var submittedMap = {};
-    for (var user in this.submissions) {
-        var submission = this.submissions[user];
+    for (var userid in this.submissions) {
+        var submission = this.submissions[userid];
         if (submission.done) {
-            submittedMap[user] = submission.cards;
+            submittedMap[userid] = submission.cards;
             this.results.push({
-                user: user,
+                userid: userid,
                 cards: submission.cards,
                 voters: []
             });
