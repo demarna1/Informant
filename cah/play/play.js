@@ -2,12 +2,14 @@ $(function() {
     // Pages
     var $waitPage = $('.wait.page');
     var $cardPage = $('.card.page');
+    var $votePage = $('.vote.page');
     var $currentPage = $waitPage;
 
     // Other jQuery elements
     var $welcomeLabel = $('.welcomeLabel .label');
     var $waitingLabel = $('.waitingLabel .label');
     var $cardList = $('.cardList');
+    var $voteList = $('.voteList');
 
     // State variables
     var socket = io('/cah');
@@ -24,6 +26,18 @@ $(function() {
             }
         }
     };
+
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
+    }
 
     function transitionTo($nextPage) {
         $currentPage.fadeOut();
@@ -81,5 +95,22 @@ $(function() {
             $cardList.append('<li class="whiteCard"><button class="cardButton">' + data.whiteCards[i] + '</button></li>');
         }
         registerClicks('answer card');
+    });
+
+    socket.on('round over', function(data) {
+        $voteList.empty();
+        var cardsForVoting = [];
+        for (var userid in data.submissions) {
+            if (userid.split('#')[1] != socket.id) {
+                cardsForVoting.push(data.submissions[userid]);
+            }
+        }
+        shuffle(cardsForVoting);
+        for (var i = 0; i < cardsForVoting.length; i++) {
+            $voteList.append('<li class="whiteCard"><button class="cardButton">' + cardsForVoting[i] + '</button></li>');
+        }
+        cardsToAnswer = 1;
+        registerClicks('vote card');
+        transitionTo($votePage);
     });
 });

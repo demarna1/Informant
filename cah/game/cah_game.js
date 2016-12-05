@@ -154,4 +154,15 @@ $(function() {
             endRound();
         }
     });
+
+    socket.on('user voted', function(data) {
+        state.addUserVote(data.userid, data.cardText, data.done);
+        if (data.done) {
+            $votedList.append('<li class="answeredPlayer">' +
+                state.getUser(data.userid).username + '</li>');
+        }
+        if (state.isVotingOver()) {
+            endVoting();
+        }
+    });
 });

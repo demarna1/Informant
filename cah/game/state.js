@@ -123,18 +123,19 @@ State.prototype.startVoting = function() {
  * a list of objects containing the user, their submitted cards, and
  * the list of the people who voted for them.
  */
-State.prototype.addUserVote = function(user, cardText, done) {
-    this.voted[user] = done;
-    var userWithVote = null;
+State.prototype.addUserVote = function(userid, cardText, done) {
+    this.voted[userid] = done;
+    var useridWithVote = null;
     for (var i = 0; i < this.results.length; i++) {
-        if (this.results[i].cards === cardText) {
-            userWithVote = this.results[i].user;
-            console.log(user + ' voted for ' + userWithVote);
-            this.results[i].voters.push(user);
+        if (this.results[i].cards == cardText) {
+            useridWithVote = this.results[i].userid;
+            console.log(this.getUser(userid).username + ' voted for ' +
+                this.getUser(useridWithVote).username);
+            this.results[i].voters.push(userid);
         }
     }
     for (var i = 0; i < this.players.length; i++) {
-        if (userWithVote === this.players[i].username) {
+        if (useridWithVote == this.players[i].userid) {
             this.players[i].score++;
         }
     }
@@ -146,8 +147,8 @@ State.prototype.addUserVote = function(user, cardText, done) {
 State.prototype.isVotingOver = function() {
     var allDone = true;
     var count = 0;
-    for (var user in this.voted) {
-        allDone &= this.voted[user];
+    for (var userid in this.voted) {
+        allDone &= this.voted[userid];
         count++;
     }
     return allDone && count >= this.players.length;

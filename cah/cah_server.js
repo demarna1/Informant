@@ -105,7 +105,18 @@ exports.addListener = function(io) {
 
         // All players have submitted an answer and voting can start
         socket.on('round over', function(data) {
-            console.log('round over, all users submitted');
+            socket.broadcast.to(socket.gameCode).emit('round over', {
+                submissions: data.submissions
+            });
+        });
+
+        // The player has submitted their vote
+        socket.on('vote card', function(data) {
+            socket.broadcast.to(socket.gameid).emit('user voted', {
+                userid: socket.id,
+                cardText: data.cardText,
+                done: data.done
+            });
         });
     });
 };
