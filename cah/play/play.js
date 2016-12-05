@@ -113,4 +113,11 @@ $(function() {
         registerClicks('vote card');
         transitionTo($votePage);
     });
+
+    socket.on('voting over', function() {
+        cardsToAnswer = 0;
+        $welcomeLabel.text('The votes are in!');
+        $waitingLabel.text('Waiting to start a new round...');
+        transitionTo($waitPage);
+    });
 });

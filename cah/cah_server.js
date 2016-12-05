@@ -118,5 +118,10 @@ exports.addListener = function(io) {
                 done: data.done
             });
         });
+
+        // The voting is over
+        socket.on('voting over', function() {
+            socket.broadcast.to(socket.gameCode).emit('voting over');
+        });
     });
 };

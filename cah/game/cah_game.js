@@ -3,6 +3,7 @@ $(function() {
     var $lobbyPage = $('.lobby.page');
     var $questionPage = $('.question.page');
     var $votePage = $('.vote.page');
+    var $resultPage = $('.result.page');
     var $currentPage = $lobbyPage;
 
     // Other jQuery elements
@@ -18,6 +19,7 @@ $(function() {
     var $submittedList = $('.submittedList');
     var $voteTimer = $('.voteTimer');
     var $votedList = $('.votedList');
+    var $resultBody = $('.resultBody');
 
     // State variables
     var socket = io('/cah');
@@ -100,8 +102,39 @@ $(function() {
         startTimer($voteTimer, 25, $votePage, endVoting);
     }
 
+    function addResultRow(i) {
+        r = state.results[i];
+        $resultBody.append('<tr id="result' + i + '" style="visibility:hidden;">' +
+            '<td class="label">' + state.getUser(r.userid).username + '</td>' +
+            '<td><button class="cardButton">' + r.cards + '</button></td>' +
+            '<td class="label">' + r.voters.length + '</td>' +
+        '</tr>');
+        var timeout = (state.results.length - i)*(4000/state.results.length) + 1;
+        setTimeout(function() {
+            $('#result' + i).css('visibility', 'visible').hide().fadeIn();
+        }, timeout);
+    }
+
     function endVoting() {
-        console.log('voting over');
+        socket.emit('voting over');
+        $resultBody.empty();
+        state.results.sort(function(a, b) {
+            return b.voters.length - a.voters.length;
+        });
+        for (var i = 0; i < state.results.length; i++) {
+            addResultRow(i);
+        }
+        transitionTo($resultPage);
+        var timeout = 11000;
+        setTimeout(function() {
+            if ($currentPage == $resultPage) {
+                endResults();
+            }
+        }, timeout);
+    }
+
+    function endResults() {
+        console.log('todo: show score page');
     }
 
     $tradButton.click(function() {
