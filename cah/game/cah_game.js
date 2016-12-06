@@ -4,6 +4,7 @@ $(function() {
     var $questionPage = $('.question.page');
     var $votePage = $('.vote.page');
     var $resultPage = $('.result.page');
+    var $scorePage = $('.score.page');
     var $currentPage = $lobbyPage;
 
     // Other jQuery elements
@@ -20,6 +21,7 @@ $(function() {
     var $voteTimer = $('.voteTimer');
     var $votedList = $('.votedList');
     var $resultBody = $('.resultBody');
+    var $scoreBody = $('.scoreBody');
 
     // State variables
     var socket = io('/cah');
@@ -116,7 +118,6 @@ $(function() {
     }
 
     function endVoting() {
-        socket.emit('voting over');
         $resultBody.empty();
         state.results.sort(function(a, b) {
             return b.voters.length - a.voters.length;
@@ -133,8 +134,41 @@ $(function() {
         }, timeout);
     }
 
+    function addScoreRow(i) {
+        r = state.players[i];
+        $scoreBody.append('<tr id="score' + i + '" style="visibility:hidden;">' +
+            '<td class="label">' + state.getUser(r.userid).username + '</td>' +
+            '<td class="label">' + r.score + '</td>' +
+        '</tr>');
+        timeout = (state.players.length - i)*(4000/state.results.length) + 1;
+        setTimeout(function() {
+            $('#score' + i).css('visibility', 'visible').hide().fadeIn();
+        }, timeout);
+    }
+
     function endResults() {
-        console.log('todo: show score page');
+        $scoreBody.empty();
+        state.players.sort(function(a, b) {
+            return b.score - a.score;
+        });
+        for (var i = 0; i < state.players.length; i++) {
+            addScoreRow(i);
+        }
+        transitionTo($scorePage);
+        var timeout = 11000;
+        setTimeout(function() {
+            if ($currentPage == $scorePage) {
+                if (state.isGameOver()) {
+                    endGame();
+                } else {
+                    socket.emit('start round');
+                }
+            }
+        }, timeout);
+    }
+
+    function endGame() {
+        console.log('todo: declare winner');
     }
 
     $tradButton.click(function() {
