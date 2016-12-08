@@ -123,5 +123,12 @@ exports.addListener = function(io) {
         socket.on('voting over', function() {
             socket.broadcast.to(socket.gameCode).emit('voting over');
         });
+
+        // The game is over
+        socket.on('game over', function(data) {
+            socket.broadcast.to(socket.gameCode).emit('game over', {
+                winner: data.winner
+            });
+        });
     });
 };

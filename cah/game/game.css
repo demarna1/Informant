@@ -66,7 +66,7 @@ ul {
     margin: 20px;
 }
 
-.question.page, .vote.page, .result.page, .score.page, .over.page {
+.question.page, .vote.page, .result.page, .score.page {
   display: none;
   text-align: center;
   margin: auto;

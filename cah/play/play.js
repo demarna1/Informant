@@ -120,4 +120,16 @@ $(function() {
         $waitingLabel.text('Waiting to start a new round...');
         transitionTo($waitPage);
     });
+
+    socket.on('game over', function(data) {
+        cardsToAnswer = 0;
+        $cardList.empty();
+        if (data.winner) {
+            $welcomeLabel.text(data.winner + ' is the winner!');
+        } else {
+            $welcomeLabel.text('Game ended due to lack of players');
+        }
+        $waitingLabel.text('Waiting to start a new game...');
+        transitionTo($waitPage);
+    });
 });

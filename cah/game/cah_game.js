@@ -21,7 +21,9 @@ $(function() {
     var $voteTimer = $('.voteTimer');
     var $votedList = $('.votedList');
     var $resultBody = $('.resultBody');
+    var $scoreGoal = $('.scoreGoal');
     var $scoreBody = $('.scoreBody');
+    var $lobbyTitle= $('.lobby.title');
 
     // State variables
     var socket = io('/cah');
@@ -118,6 +120,7 @@ $(function() {
     }
 
     function endVoting() {
+        socket.emit('voting over');
         $resultBody.empty();
         state.results.sort(function(a, b) {
             return b.voters.length - a.voters.length;
@@ -168,11 +171,17 @@ $(function() {
     }
 
     function endGame() {
-        console.log('todo: declare winner');
+        var winner = state.players[0].username;
+        $lobbyTitle.text('Congratulations, ' + winner + '!');
+        transitionTo($lobbyPage);
+        socket.emit('game over', {
+            winner: winner
+        });
     }
 
     $tradButton.click(function() {
         state.winningScore = 5 * state.players.length;
+        $scoreGoal.text(state.winningScore);
         socket.emit('start round');
     });
 
@@ -198,7 +207,9 @@ $(function() {
         updateLobby();
         if (state.players.length < 2) {
             state.restart();
+            $lobbyTitle.text('Cards Against Humanity');
             transitionTo($lobbyPage);
+            socket.emit('game over', { });
         }
     });
 
