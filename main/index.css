@@ -36,6 +36,11 @@ body {
     padding: 20px;
 }
 
+.gameButton {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .footer {
     position: absolute;
     bottom: 0;

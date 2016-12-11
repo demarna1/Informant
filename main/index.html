@@ -36,12 +36,16 @@
   <div class="site-body-games">
     <div class="container text-center">
       <h3><span class="glyphicon glyphicon-blackboard"></span> Create Game</h3>
-      <h4>Informant</h4>
-      <input class="btn btn-primary btn-lg" type="button" id="newButton"
-          value="New Game" onclick="location.href='/informant'"/>
-      <h4>Cards Against Humanity</h4>
-      <input class="btn btn-primary btn-lg" type="button" id="newButton"
-          value="New Game" onclick="location.href='/cah'"/>
+      <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <a class="btn btn-default btn-block gameButton" href="/informant">
+          <img src="/InformantHome.png" style="width:100%"/>
+        </a>
+      </div>
+      <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <a class="btn btn-default btn-block gameButton" href="/cah">
+          <img src="/CahHome.png" style="width:100%"/>
+        </a>
+      </div>
     </div>
   </div>
   <footer class="footer">
