@@ -17,7 +17,11 @@ app.get('/', function(req, res) {
 app.use(express.static(__dirname + '/informant/game'));
 app.use(express.static(__dirname + '/informant/play'));
 app.get('/informant', function(req, res) {
-    res.sendFile(path.resolve('informant/game/game.html'));
+    if (req.query.gameCode && req.query.name) {
+        res.sendFile(path.resolve('informant/play/inf_play.html'));
+    } else {
+        res.sendFile(path.resolve('informant/game/inf_game.html'));
+    }
 });
 
 // Configure Cards Against Humanity routes
@@ -25,9 +29,9 @@ app.use(express.static(__dirname + '/cah/game'));
 app.use(express.static(__dirname + '/cah/play'));
 app.get('/cah', function(req, res) {
     if (req.query.gameCode && req.query.name) {
-        res.sendFile(path.resolve('cah/play/play.html'));
+        res.sendFile(path.resolve('cah/play/cah_play.html'));
     } else {
-        res.sendFile(path.resolve('cah/game/game.html'));
+        res.sendFile(path.resolve('cah/game/cah_game.html'));
     }
 });
 
@@ -54,7 +58,10 @@ app.get('/play', function(req, res) {
             'url': '/cah'
         });
     } else if (gameCode in infServer.rooms) {
-        res.json({'result': 'error'});
+        res.json({
+            'result': 'success',
+            'url': '/informant'
+        });
     } else {
         res.json({'result': 'error'});
     }
