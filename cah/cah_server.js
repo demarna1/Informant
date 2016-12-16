@@ -3,8 +3,8 @@ exports.rooms = {};
 
 exports.addListener = function(io) {
     var db = require('./db/db.js');
-    var infNamespace = io.of('/cah');
-    infNamespace.on('connection', function(socket) {
+    var namespace = io.of('/cah');
+    namespace.on('connection', function(socket) {
         var addedUser = false;
         var addedGame = false;
 

@@ -17,7 +17,7 @@ app.get('/', function(req, res) {
 app.use(express.static(__dirname + '/informant/game'));
 app.use(express.static(__dirname + '/informant/play'));
 app.get('/informant', function(req, res) {
-    res.sendFile(path.resolve('informant/game/practice.html'));
+    res.sendFile(path.resolve('informant/game/game.html'));
 });
 
 // Configure Cards Against Humanity routes
