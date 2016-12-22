@@ -63,7 +63,7 @@ State.prototype.removeUser = function(userid) {
 
 State.prototype.getUser = function(userid) {
     for (var i = 0; i < this.players.length; i++) {
-        if (this.players[i].userid == userid) {
+        if (this.players[i].userid === userid) {
             return this.players[i];
         }
     }
@@ -127,7 +127,7 @@ State.prototype.addUserVote = function(userid, cardText, done) {
     this.voted[userid] = done;
     var useridWithVote = null;
     for (var i = 0; i < this.results.length; i++) {
-        if (this.results[i].cards == cardText) {
+        if (this.results[i].cards === cardText) {
             useridWithVote = this.results[i].userid;
             console.log(this.getUser(userid).username + ' voted for ' +
                 this.getUser(useridWithVote).username);
@@ -135,7 +135,7 @@ State.prototype.addUserVote = function(userid, cardText, done) {
         }
     }
     for (var i = 0; i < this.players.length; i++) {
-        if (useridWithVote == this.players[i].userid) {
+        if (useridWithVote === this.players[i].userid) {
             this.players[i].score++;
         }
     }

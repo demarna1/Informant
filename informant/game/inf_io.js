@@ -1,21 +1,26 @@
 $(function() {
     var socket = io('/informant');
-    var game = null;
+    var state = null;
 
     socket.on('connect', function() {
-        socket.emit('new game');
+        loadGame(function() {
+            socket.emit('new game');
+        });
     });
 
     socket.on('code created', function(data) {
         console.log('new game code = ' + data.gameCode);
-        game = new Game(data.gameCode);
+        state = new State(data.gameCode);
+        update(state);
     });
 
     socket.on('user joined', function(data) {
-        game.addUser(data.username);
+        state.addUser(data.userid, data.username);
+        update(state);
     });
 
     socket.on('user left', function(data) {
-        game.removeUser(data.username);
+        state.removeUser(data.userid);
+        update(state);
     });
 });

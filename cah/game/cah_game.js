@@ -42,7 +42,7 @@ $(function() {
     }
 
     function transitionTo($nextPage) {
-        if ($currentPage == $nextPage) return;
+        if ($currentPage === $nextPage) return;
         $currentPage.fadeOut();
         $nextPage.delay(400).fadeIn();
         $currentPage = $nextPage;
@@ -78,7 +78,7 @@ $(function() {
             if (--timeLeft < 0) {
                 clearInterval(startTimer.currentId);
                 startTimer.currentId = 0;
-                if ($currentPage == $triggerPage) {
+                if ($currentPage === $triggerPage) {
                     triggerCallback();
                 }
                 return;
@@ -131,7 +131,7 @@ $(function() {
         transitionTo($resultPage);
         var timeout = 11000;
         setTimeout(function() {
-            if ($currentPage == $resultPage) {
+            if ($currentPage === $resultPage) {
                 endResults();
             }
         }, timeout);
@@ -160,7 +160,7 @@ $(function() {
         transitionTo($scorePage);
         var timeout = 11000;
         setTimeout(function() {
-            if ($currentPage == $scorePage) {
+            if ($currentPage === $scorePage) {
                 if (state.isGameOver()) {
                     endGame();
                 } else {
