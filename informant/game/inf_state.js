@@ -1,12 +1,16 @@
 function State(gameCode) {
     this.gameCode = gameCode;
     this.players = [];
+    this.colors = ['blue', 'yellow', 'orange', 'green',
+        'red', 'white', 'magenta', 'black', 'brown'];
 }
 
 State.prototype.addUser = function(userid, username) {
+    var rindex = Math.floor(Math.random()*this.colors.length);
     this.players.push({
         userid: userid,
-        username: username
+        username: username,
+        color: this.colors.splice(rindex, 1)[0]
     });
 };
 
