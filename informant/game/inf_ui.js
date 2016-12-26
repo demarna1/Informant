@@ -65,21 +65,28 @@ function drawLobbyBackground(stage) {
 
 function drawLobbyBomb(stage) {
     var lobbybomb = new createjs.Bitmap(lobbyBomb);
-    var scaleWidth = (canvas.width/2) / lobbybomb.image.width;
-    var scaleHeight = (canvas.height/2) / lobbybomb.image.height;
+    var scaleWidth = (canvas.width*0.4) / lobbybomb.image.width;
+    var scaleHeight = (canvas.height*0.6) / lobbybomb.image.height;
     var scale = Math.min(scaleWidth, scaleHeight);
     lobbybomb.scaleX = scale;
     lobbybomb.scaleY = scale;
-    lobbybomb.x = (canvas.width/2 - lobbybomb.image.width*scale)/2;
-    lobbybomb.y = (canvas.height/2 - lobbybomb.image.height*scale)/2;
+    lobbybomb.x = (canvas.width*0.4 - lobbybomb.image.width*scale)/2;
+    lobbybomb.y = (canvas.height*0.6 - lobbybomb.image.height*scale)/2;
     stage.addChild(lobbybomb);
 }
 
 function drawGameCode(stage) {
-    var text = new createjs.Text(state.gameCode, '40px Russo One', '#ff7700');
-    text.x = 400;
-    text.y = 100;
-    text.textBaseline = 'alphabetic';
+    var roundRect = new createjs.Shape();
+    var padding = 20;
+    roundRect.graphics.beginFill('black').drawRoundRect(canvas.width*0.4 + padding,
+        padding, canvas.width*0.6 - padding*2, canvas.height*0.6 - padding, 10);
+    roundRect.alpha = 0.3;
+    roundRect.shadow = new createjs.Shadow('#000000', -5, 3, 10);
+    stage.addChild(roundRect);
+
+    var text = new createjs.Text(state.gameCode, '40px Russo One', '#ff8000');
+    text.x = canvas.width*0.7 - text.getBounds().width/2;
+    text.y = canvas.height*0.3 - text.getBounds().height/2 + padding/2;
     stage.addChild(text);
 }
 
@@ -152,7 +159,7 @@ function drawBubbles(stage) {
     var numBubbles = Math.min(Math.max(4, state.players.length+1), 8);
     var padding = Math.floor(canvas.width/(numBubbles*6));
     var blockWidth = (canvas.width - 2*padding)/numBubbles;
-    var radius = Math.min(canvas.height/2 - 2*padding, blockWidth - 2*padding)/2;
+    var radius = Math.min(canvas.height*0.4 - 2*padding, blockWidth - 2*padding)/2;
 
     // A player has joined this bubble slot
     var playerBubble = new createjs.Container();
@@ -182,7 +189,7 @@ function drawBubbles(stage) {
             bubble = joinBubble.clone(true);
         }
         bubble.x = padding + blockWidth*i + blockWidth/2;
-        bubble.y = 0.75*canvas.height;
+        bubble.y = 0.8*canvas.height;
         stage.addChild(bubble);
     }
 }
