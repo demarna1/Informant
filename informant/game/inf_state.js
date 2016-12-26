@@ -2,7 +2,7 @@ function State(gameCode) {
     this.gameCode = gameCode;
     this.players = [];
     this.colors = ['blue', 'yellow', 'orange', 'green',
-        'red', 'white', 'magenta', 'black', 'brown'];
+        'red', 'magenta', 'black', 'brown'];
 }
 
 State.prototype.addUser = function(userid, username) {

@@ -15,7 +15,7 @@ function loadGame(callback) {
     var queue = new createjs.LoadQueue();
     queue.on('complete', handleComplete, this);
     queue.loadManifest([
-        { id: 'lobbyBackground', src: '/img/LobbyBackground.png' },
+        { id: 'lobbyBackground', src: '/img/SheetMetal.png' },
         { id: 'lobbyBomb', src: '/img/LobbyBomb.png' },
         { id: 'scissorsColorOpen', src: '/img/ScissorsColorOpen.png' },
         { id: 'scissorsFrameOpen', src: '/img/ScissorsFrameOpen.png' }
@@ -47,70 +47,111 @@ function loadGame(callback) {
 
 function drawLobbyBackground(stage) {
     var lobbybg = new createjs.Bitmap(lobbyBackground);
-    var scaleWidth = canvas.width / lobbybg.image.width;
-    var scaleHeight = canvas.height / lobbybg.image.height;
-    var scale = Math.max(scaleWidth, scaleHeight);
+    var filter = new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 0, 0, 0, 0);
+    var scale = 0.65;
     lobbybg.scaleX = scale;
     lobbybg.scaleY = scale;
-    lobbybg.x = 0;
-    lobbybg.y = 0;
-    stage.addChild(lobbybg);
+    for (var i = 0; i < canvas.width/(lobbybg.image.width*scale); i++) {
+        for (var j = 0; j < canvas.height/(lobbybg.image.height*scale); j++) {
+            var bgpiece = lobbybg.clone();
+            bgpiece.filters = [filter];
+            bgpiece.cache(0, 0, lobbybg.image.width, lobbybg.image.height);
+            bgpiece.x = i*(bgpiece.image.width*scale);
+            bgpiece.y = j*(bgpiece.image.height*scale);
+            stage.addChild(bgpiece);
+        }
+    }
 }
 
 function drawLobbyBomb(stage) {
     var lobbybomb = new createjs.Bitmap(lobbyBomb);
-    var scale = (0.33 * canvas.width) / lobbybomb.image.width;
-    if ((lobbybomb.image.height * scale) / canvas.height > 0.5) {
-        scale = (0.5 * canvas.height) / lobbybomb.image.height;
-    }
+    var scaleWidth = (canvas.width/2) / lobbybomb.image.width;
+    var scaleHeight = (canvas.height/2) / lobbybomb.image.height;
+    var scale = Math.min(scaleWidth, scaleHeight);
     lobbybomb.scaleX = scale;
     lobbybomb.scaleY = scale;
-    lobbybomb.x = 40;
-    lobbybomb.y = 20;
+    lobbybomb.x = (canvas.width/2 - lobbybomb.image.width*scale)/2;
+    lobbybomb.y = (canvas.height/2 - lobbybomb.image.height*scale)/2;
     stage.addChild(lobbybomb);
 }
 
 function drawGameCode(stage) {
-    var text = new createjs.Text(state.gameCode, '40px Cambria', '#ff7700');
+    var text = new createjs.Text(state.gameCode, '40px Russo One', '#ff7700');
     text.x = 400;
     text.y = 100;
     text.textBaseline = 'alphabetic';
     stage.addChild(text);
 }
 
-function drawScissors(/*stage, filter, x, y*/) {
-    /*
-    var scissors = new createjs.Bitmap(scissorsColorOpen);
-    scissors.filters = [ filter ];
-    scissors.cache(0, 0, scissors.getBounds().width, scissors.getBounds().height);
-    scissors.scaleX = 0.2;
-    scissors.scaleY = 0.2;
-    scissors.x = x;
-    scissors.y = y;
-    stage.addChild(scissors);
-    */
-
-    var frame = new createjs.Bitmap(scissorsFrameOpen);
-    frame.scaleX = 0.05;
-    frame.scaleY = 0.05;
-    /*frame.x = x;
-    frame.y = y;
-    stage.addChild(frame);*/
-    return frame;
-}
-
 function editPlayerBubble(bubble, radius, player) {
+    // Assets to add
+    var frame = new createjs.Bitmap(scissorsFrameOpen);
+    var scissors = new createjs.Bitmap(scissorsColorOpen);
+    var playerText = new createjs.Text(player.username, 'bold 26px Play', '#000000');
+
+    // Position and scale calculations
     var s = radius / Math.sqrt(2);
-    var playerText = new createjs.Text(player.username, '26px Cambria', '#000000');
-    var bounds = playerText.getBounds();
-    playerText.x = -bounds.width/2;
-    playerText.y = s - bounds.height;
+    var scissorsScale = (2*s) / scissors.image.width;
+    var textScale = 1;
+    if (playerText.getBounds().width > 2*s) {
+        textScale = (2*s) / playerText.getBounds().width;
+    }
+    var gap = Math.max(0, ((s - (playerText.getBounds().height * textScale)) -
+        (-s + scissors.image.height*scissorsScale)) - 8);
+
+    switch (player.color) {
+        case 'blue':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 255, 0)];
+            break;
+        case 'yellow':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 0, 0)];
+            break;
+        case 'orange':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 165, 0, 0)];
+            break;
+        case 'green':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 255, 0, 0)];
+            break;
+        case 'red':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0, 0)];
+            break;
+        case 'white':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 255, 0)];
+            break;
+        case 'magenta':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 255, 0)];
+            break;
+        case 'black':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 0, 0)];
+            break;
+        case 'brown':
+            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 150, 100, 50, 0)];
+            break;
+    }
+    scissors.cache(0, 0, scissors.image.width, scissors.image.height);
+    scissors.scaleX = scissorsScale;
+    scissors.scaleY = scissorsScale;
+    scissors.x = -s;
+    scissors.y = -s + gap/2;
+    bubble.addChild(scissors);
+
+    frame.scaleX = scissorsScale;
+    frame.scaleY = scissorsScale;
+    frame.x = -s;
+    frame.y = -s + gap/2;
+    bubble.addChild(frame);
+
+    playerText.scaleX = textScale;
+    playerText.scaleY = textScale;
+    playerText.x = -(playerText.getBounds().width*textScale)/2;
+    playerText.y = (s - playerText.getBounds().height*textScale) - gap/2;
     bubble.addChild(playerText);
 }
 
 function drawBubbles(stage) {
-    var padding = Math.floor(canvas.width/(Math.max(4, state.players.length+1)*6));
-    var blockWidth = (canvas.width - 2*padding)/Math.max(4, state.players.length+1);
+    var numBubbles = Math.min(Math.max(4, state.players.length+1), 8);
+    var padding = Math.floor(canvas.width/(numBubbles*6));
+    var blockWidth = (canvas.width - 2*padding)/numBubbles;
     var radius = Math.min(canvas.height/2 - 2*padding, blockWidth - 2*padding)/2;
 
     // A player has joined this bubble slot
@@ -126,13 +167,13 @@ function drawBubbles(stage) {
     joinCircle.graphics.setStrokeDash([6,4]);
     joinCircle.graphics.setStrokeStyle(2).beginStroke('white').drawCircle(0, 0, radius);
     joinBubble.addChild(joinCircle);
-    var joinText = new createjs.Text('join', '26px Cambria', '#ffffff');
+    var joinText = new createjs.Text('join', '26px Play', '#ffffff');
     var bounds = joinText.getBounds();
     joinText.x = -bounds.width/2;
     joinText.y = -bounds.height/2;
     joinBubble.addChild(joinText);
 
-    for (var i = 0; i < Math.max(4, state.players.length+1); i++) {
+    for (var i = 0; i < numBubbles; i++) {
         var bubble = null;
         if (i < state.players.length) {
             bubble = playerBubble.clone(true);
@@ -144,42 +185,6 @@ function drawBubbles(stage) {
         bubble.y = 0.75*canvas.height;
         stage.addChild(bubble);
     }
-}
-
-function drawPlayerBubble(stage, index) {
-    /*
-    var filter = null;
-    switch (player.color) {
-        case 'blue':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 255, 0);
-            break;
-        case 'yellow':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 0, 0);
-            break;
-        case 'orange':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 255, 165, 0, 0);
-            break;
-        case 'green':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 0, 255, 0, 0);
-            break;
-        case 'red':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0, 0);
-            break;
-        case 'white':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 255, 0);
-            break;
-        case 'magenta':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 255, 0);
-            break;
-        case 'black':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 0, 0);
-            break;
-        case 'brown':
-            filter = new createjs.ColorFilter(0, 0, 0, 1, 150, 100, 50, 0);
-            break;
-    }
-    drawScissors(stage, filter, 30+100*index, 30);
-    */
 }
 
 function draw() {
