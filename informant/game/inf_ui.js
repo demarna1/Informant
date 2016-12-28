@@ -4,7 +4,8 @@ var canvas = null;
 // Cached state (for resizing events)
 var state = null;
 
-// Lobby assets
+// Game assets
+var informantLogo = null;
 var lobbyBackground = null;
 var lobbyBomb = null;
 var scissorsColorOpen = null;
@@ -15,6 +16,7 @@ function loadGame(callback) {
     var queue = new createjs.LoadQueue();
     queue.on('complete', handleComplete, this);
     queue.loadManifest([
+        { id: 'informantLogo', src: '/img/InformantLogo.png' },
         { id: 'lobbyBackground', src: '/img/SheetMetal.png' },
         { id: 'lobbyBomb', src: '/img/LobbyBomb.png' },
         { id: 'scissorsColorOpen', src: '/img/ScissorsColorOpen.png' },
@@ -23,6 +25,7 @@ function loadGame(callback) {
 
     function handleComplete() {
         // Get image handles and create bitmaps
+        informantLogo = queue.getResult('informantLogo');
         lobbyBackground = queue.getResult('lobbyBackground');
         lobbyBomb = queue.getResult('lobbyBomb');
         scissorsColorOpen = queue.getResult('scissorsColorOpen');
@@ -77,18 +80,48 @@ function drawBomb(stage) {
 }
 
 function drawInfoBox(stage) {
-    var roundRect = new createjs.Shape();
     var padding = 20;
-    roundRect.graphics.beginFill('black').drawRoundRect(canvas.width*0.4 + padding,
-        padding, canvas.width*0.6 - padding*2, canvas.height*0.6 - padding, 10);
-    roundRect.alpha = 0.3;
-    roundRect.shadow = new createjs.Shadow('#000000', -5, 3, 10);
-    stage.addChild(roundRect);
 
-    var text = new createjs.Text('Room Code: ' + state.gameCode, '40px Russo One', '#ff8000');
-    text.x = canvas.width*0.7 - text.getBounds().width/2;
-    text.y = canvas.height*0.3 - text.getBounds().height/2 + padding/2;
-    stage.addChild(text);
+    var box = new createjs.Shape();
+    var boxX = canvas.width*0.4 + padding;
+    var boxY = padding;
+    var boxWidth = canvas.width*0.6 - padding*2;
+    var boxHeight = canvas.height*0.6 - padding;
+    box.graphics.beginFill('black').drawRoundRect(boxX, boxY, boxWidth, boxHeight, 10);
+    box.alpha = 0.3;
+    box.shadow = new createjs.Shadow('#000000', -5, 3, 10);
+    stage.addChild(box);
+
+    var logo = new createjs.Bitmap(informantLogo);
+    var scaleWidth = (boxWidth - padding*2) / logo.image.width;
+    var scaleHeight = (boxHeight/3 - padding*2) / logo.image.height;
+    var lScale = Math.min(scaleWidth, scaleHeight);
+    logo.scaleX = lScale;
+    logo.scaleY = lScale;
+    logo.x = (boxWidth - logo.image.width*lScale)/2 + boxX;
+    logo.y = (boxHeight/3 - logo.image.height*lScale)/2 + boxY;
+    stage.addChild(logo);
+
+    var info = new createjs.Text();
+    info.set({
+        text: 'Join on your mobile device at\nwww.noahd.com',
+        font: '26px Play',
+        color: '#dcdcdc',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        x: boxWidth/2 + boxX,
+        y: (boxHeight/3)/2 + boxY + (boxHeight*2)/3
+    });
+    stage.addChild(info);
+
+    // TODO: Don't add this to overall container
+    var code = new createjs.Text('Room Code: ' + state.gameCode, '40px Russo One', '#ffA000');
+    var cScale = (canvas.width*0.6)/(code.getBounds().width*2.5);
+    code.scaleX = cScale;
+    code.scaleY = cScale;
+    code.x = canvas.width*0.7 - (code.getBounds().width*cScale)/2;
+    code.y = canvas.height*0.3 - (code.getBounds().height*cScale)/2 + padding/2;
+    stage.addChild(code);
 }
 
 function editPlayerBubble(bubble, radius, player) {
