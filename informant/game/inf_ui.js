@@ -14,14 +14,29 @@ var scissorsFrameOpen = null;
 // Load game assets
 function loadGame(callback) {
     var queue = new createjs.LoadQueue();
-    queue.on('complete', handleComplete, this);
+    queue.installPlugin(createjs.Sound);
+    queue.on('progress', handleProgress);
+    queue.on('complete', handleComplete);
     queue.loadManifest([
         { id: 'informantLogo', src: '/img/InformantLogo.png' },
         { id: 'lobbyBackground', src: '/img/SheetMetal.png' },
         { id: 'lobbyBomb', src: '/img/LobbyBomb.png' },
         { id: 'scissorsColorOpen', src: '/img/ScissorsColorOpen.png' },
-        { id: 'scissorsFrameOpen', src: '/img/ScissorsFrameOpen.png' }
+        { id: 'scissorsFrameOpen', src: '/img/ScissorsFrameOpen.png' },
+        { id: 'lobbyMusic', src: '/sound/lobby-music.mp3' },
+        { id: 'bronx-cheer', src: '/sound/bronx-cheer.mp3' },
+        { id: 'ding', src: '/sound/ding.mp3' },
+        { id: 'punch', src: '/sound/punch.mp3' },
+        { id: 'splish', src: '/sound/splish.mp3' },
+        { id: 'sudden-impact', src: '/sound/sudden-impact.mp3' },
+        { id: 'toasty', src: '/sound/toasty.mp3' },
+        { id: 'transition-whoosh', src: '/sound/transition-whoosh.mp3' },
+        { id: 'whoosh', src: '/sound/whoosh.mp3' }
     ]);
+
+    function handleProgress() {
+        console.log('progress = ' + queue.progress*100 + '%');
+    }
 
     function handleComplete() {
         // Get image handles and create bitmaps
@@ -233,6 +248,14 @@ function drawLobbyPage(stage) {
     drawBomb(stage);
     drawInfoBox(stage);
     drawBubbles(stage);
+}
+
+function playLobbyMusic() {
+    createjs.Sound.play('lobbyMusic', {loop: -1});
+}
+
+function playJoinSound(userid) {
+    createjs.Sound.play(state.getUser(userid).sound);
 }
 
 function draw() {

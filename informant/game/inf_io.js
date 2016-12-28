@@ -12,11 +12,13 @@ $(function() {
         console.log('new game code = ' + data.gameCode);
         state = new State(data.gameCode);
         update(state);
+        playLobbyMusic();
     });
 
     socket.on('user joined', function(data) {
         state.addUser(data.userid, data.username);
         update(state);
+        playJoinSound(data.userid);
     });
 
     socket.on('user left', function(data) {
