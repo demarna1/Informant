@@ -45,17 +45,17 @@ function loadGame(callback) {
     }
 }
 
-function drawLobbyBackground(stage) {
-    var lobbybg = new createjs.Bitmap(lobbyBackground);
+function drawBackground(stage) {
+    var bg = new createjs.Bitmap(lobbyBackground);
     var filter = new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 0, 0, 0, 0);
     var scale = 0.65;
-    lobbybg.scaleX = scale;
-    lobbybg.scaleY = scale;
-    for (var i = 0; i < canvas.width/(lobbybg.image.width*scale); i++) {
-        for (var j = 0; j < canvas.height/(lobbybg.image.height*scale); j++) {
-            var bgpiece = lobbybg.clone();
+    bg.scaleX = scale;
+    bg.scaleY = scale;
+    for (var i = 0; i < canvas.width/(bg.image.width*scale); i++) {
+        for (var j = 0; j < canvas.height/(bg.image.height*scale); j++) {
+            var bgpiece = bg.clone();
             bgpiece.filters = [filter];
-            bgpiece.cache(0, 0, lobbybg.image.width, lobbybg.image.height);
+            bgpiece.cache(0, 0, bg.image.width, bg.image.height);
             bgpiece.x = i*(bgpiece.image.width*scale);
             bgpiece.y = j*(bgpiece.image.height*scale);
             stage.addChild(bgpiece);
@@ -63,19 +63,20 @@ function drawLobbyBackground(stage) {
     }
 }
 
-function drawLobbyBomb(stage) {
-    var lobbybomb = new createjs.Bitmap(lobbyBomb);
-    var scaleWidth = (canvas.width*0.4) / lobbybomb.image.width;
-    var scaleHeight = (canvas.height*0.6) / lobbybomb.image.height;
+function drawBomb(stage) {
+    var bomb = new createjs.Bitmap(lobbyBomb);
+    var padding = 40;
+    var scaleWidth = (canvas.width*0.4 - padding*2) / bomb.image.width;
+    var scaleHeight = (canvas.height*0.6 - padding*2) / bomb.image.height;
     var scale = Math.min(scaleWidth, scaleHeight);
-    lobbybomb.scaleX = scale;
-    lobbybomb.scaleY = scale;
-    lobbybomb.x = (canvas.width*0.4 - lobbybomb.image.width*scale)/2;
-    lobbybomb.y = (canvas.height*0.6 - lobbybomb.image.height*scale)/2;
-    stage.addChild(lobbybomb);
+    bomb.scaleX = scale;
+    bomb.scaleY = scale;
+    bomb.x = (canvas.width*0.4 - bomb.image.width*scale)/2;
+    bomb.y = (canvas.height*0.6 - bomb.image.height*scale)/2;
+    stage.addChild(bomb);
 }
 
-function drawGameCode(stage) {
+function drawInfoBox(stage) {
     var roundRect = new createjs.Shape();
     var padding = 20;
     roundRect.graphics.beginFill('black').drawRoundRect(canvas.width*0.4 + padding,
@@ -84,7 +85,7 @@ function drawGameCode(stage) {
     roundRect.shadow = new createjs.Shadow('#000000', -5, 3, 10);
     stage.addChild(roundRect);
 
-    var text = new createjs.Text(state.gameCode, '40px Russo One', '#ff8000');
+    var text = new createjs.Text('Room Code: ' + state.gameCode, '40px Russo One', '#ff8000');
     text.x = canvas.width*0.7 - text.getBounds().width/2;
     text.y = canvas.height*0.3 - text.getBounds().height/2 + padding/2;
     stage.addChild(text);
@@ -194,12 +195,16 @@ function drawBubbles(stage) {
     }
 }
 
+function drawLobbyPage(stage) {
+    drawBackground(stage);
+    drawBomb(stage);
+    drawInfoBox(stage);
+    drawBubbles(stage);
+}
+
 function draw() {
     var stage = new createjs.Stage('infCanvas');
-    drawLobbyBackground(stage);
-    drawLobbyBomb(stage);
-    drawGameCode(stage);
-    drawBubbles(stage);
+    drawLobbyPage(stage);
     stage.update();
 }
 
