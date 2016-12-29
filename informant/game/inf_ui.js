@@ -13,6 +13,11 @@ var scissorsFrameOpen = null;
 
 // Load game assets
 function loadGame(callback) {
+    // Set initial canvas dimensions
+    canvas = document.getElementById('infCanvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     var queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound);
     queue.on('progress', handleProgress);
@@ -34,8 +39,37 @@ function loadGame(callback) {
         { id: 'whoosh', src: '/sound/whoosh.mp3' }
     ]);
 
+    // Update progress bar
     function handleProgress() {
-        console.log('progress = ' + queue.progress*100 + '%');
+        var stage = new createjs.Stage(canvas);
+
+        var progressText = new createjs.Text();
+        progressText.set({
+            text: 'Progress: 0%',
+            font: '26px Play',
+            color: '#000000',
+            textAlign: 'center',
+            textBaseline: 'middle',
+            x: canvas.width/2,
+            y: canvas.height/2
+        });
+        progressText.text = (queue.progress*100|0) + '% Loaded';
+
+        var barX = canvas.width/2 - 150;
+        var barY = canvas.height/2 - 40;
+        var barWidth = 300;
+        var barHeight = 80;
+        var loadRect = new createjs.Shape();
+        loadRect.graphics.beginFill('#c00000');
+        loadRect.graphics.drawRect(barX, barY, barWidth*queue.progress, barHeight);
+        var borderRect = new createjs.Shape();
+        borderRect.graphics.setStrokeStyle(3).beginStroke('black');
+        borderRect.graphics.drawRect(barX, barY, barWidth, barHeight);
+
+        stage.addChild(loadRect);
+        stage.addChild(borderRect);
+        stage.addChild(progressText);
+        stage.update();
     }
 
     function handleComplete() {
@@ -47,7 +81,6 @@ function loadGame(callback) {
         scissorsFrameOpen = queue.getResult('scissorsFrameOpen');
 
         // Get the canvas and set resize listener
-        canvas = document.getElementById('infCanvas');
         state = new State('????');
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -130,7 +163,7 @@ function drawInfoBox(stage) {
     stage.addChild(info);
 
     // TODO: Don't add this to overall container
-    var code = new createjs.Text('Room Code: ' + state.gameCode, '40px Russo One', '#ffA000');
+    var code = new createjs.Text('Room Code: ' + state.gameCode, 'bold 26px Play', '#ffA000');
     var cScale = (canvas.width*0.6)/(code.getBounds().width*2.5);
     code.scaleX = cScale;
     code.scaleY = cScale;
