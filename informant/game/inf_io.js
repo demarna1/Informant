@@ -22,7 +22,10 @@ $(function() {
     });
 
     socket.on('user left', function(data) {
-        state.removeUser(data.userid);
-        update(state);
+        //state.removeUser(data.userid);
+        //update(state);
+        animateLobbyPage(function() {
+            state.screen = ScreenEnum.BOMB_OVERVIEW;
+        });
     });
 });

@@ -1,5 +1,11 @@
+ScreenEnum = {
+    LOBBY: 0,
+    BOMB_OVERVIEW: 0
+}
+
 function State(gameCode) {
     this.gameCode = gameCode;
+    this.screen = ScreenEnum.LOBBY;
     this.players = [];
     this.colors = ['blue', 'yellow', 'orange', 'green',
         'red', 'magenta', 'black', 'brown'];

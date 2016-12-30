@@ -1,5 +1,6 @@
-// Root canvas element
+// Root canvas element and stage
 var canvas = null;
+var stage = null;
 
 // Cached state (for resizing events)
 var state = null;
@@ -10,6 +11,7 @@ var lobbyBackground = null;
 var lobbyBomb = null;
 var scissorsColorOpen = null;
 var scissorsFrameOpen = null;
+var lobbyContainer = null;
 
 // Load game assets
 function loadGame(callback) {
@@ -17,6 +19,33 @@ function loadGame(callback) {
     canvas = document.getElementById('infCanvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    stage = new createjs.Stage('infCanvas');
+
+    // Progress bar initialization
+    var progressText = new createjs.Text();
+    progressText.set({
+        text: 'Progress: 0%',
+        font: '26px Play',
+        color: '#000000',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        x: canvas.width/2,
+        y: canvas.height/2
+    });
+    var barX = canvas.width/2 - 150;
+    var barY = canvas.height/2 - 40;
+    var barWidth = 300;
+    var barHeight = 80;
+    var loadRect = new createjs.Shape();
+    loadRect.graphics.beginFill('#c00000');
+    loadRect.graphics.drawRect(barX, barY, 0, barHeight);
+    var borderRect = new createjs.Shape();
+    borderRect.graphics.setStrokeStyle(3).beginStroke('black');
+    borderRect.graphics.drawRect(barX, barY, barWidth, barHeight);
+    stage.addChild(loadRect);
+    stage.addChild(borderRect);
+    stage.addChild(progressText);
+    stage.update();
 
     var queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound);
@@ -41,34 +70,9 @@ function loadGame(callback) {
 
     // Update progress bar
     function handleProgress() {
-        var stage = new createjs.Stage(canvas);
-
-        var progressText = new createjs.Text();
-        progressText.set({
-            text: 'Progress: 0%',
-            font: '26px Play',
-            color: '#000000',
-            textAlign: 'center',
-            textBaseline: 'middle',
-            x: canvas.width/2,
-            y: canvas.height/2
-        });
         progressText.text = (queue.progress*100|0) + '% Loaded';
-
-        var barX = canvas.width/2 - 150;
-        var barY = canvas.height/2 - 40;
-        var barWidth = 300;
-        var barHeight = 80;
-        var loadRect = new createjs.Shape();
-        loadRect.graphics.beginFill('#c00000');
+        loadRect.graphics.clear().beginFill('#c00000');
         loadRect.graphics.drawRect(barX, barY, barWidth*queue.progress, barHeight);
-        var borderRect = new createjs.Shape();
-        borderRect.graphics.setStrokeStyle(3).beginStroke('black');
-        borderRect.graphics.drawRect(barX, barY, barWidth, barHeight);
-
-        stage.addChild(loadRect);
-        stage.addChild(borderRect);
-        stage.addChild(progressText);
         stage.update();
     }
 
@@ -96,7 +100,7 @@ function loadGame(callback) {
     }
 }
 
-function drawBackground(stage) {
+function drawBackground(container) {
     var bg = new createjs.Bitmap(lobbyBackground);
     var filter = new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 0, 0, 0, 0);
     var scale = 0.65;
@@ -109,12 +113,12 @@ function drawBackground(stage) {
             bgpiece.cache(0, 0, bg.image.width, bg.image.height);
             bgpiece.x = i*(bgpiece.image.width*scale);
             bgpiece.y = j*(bgpiece.image.height*scale);
-            stage.addChild(bgpiece);
+            container.addChild(bgpiece);
         }
     }
 }
 
-function drawBomb(stage) {
+function drawBomb(container) {
     var bomb = new createjs.Bitmap(lobbyBomb);
     var padding = 40;
     var scaleWidth = (canvas.width*0.4 - padding*2) / bomb.image.width;
@@ -124,12 +128,11 @@ function drawBomb(stage) {
     bomb.scaleY = scale;
     bomb.x = (canvas.width*0.4 - bomb.image.width*scale)/2;
     bomb.y = (canvas.height*0.6 - bomb.image.height*scale)/2;
-    stage.addChild(bomb);
+    container.addChild(bomb);
 }
 
-function drawInfoBox(stage) {
+function drawInfoBox(container) {
     var padding = 20;
-
     var box = new createjs.Shape();
     var boxX = canvas.width*0.4 + padding;
     var boxY = padding;
@@ -138,7 +141,7 @@ function drawInfoBox(stage) {
     box.graphics.beginFill('black').drawRoundRect(boxX, boxY, boxWidth, boxHeight, 10);
     box.alpha = 0.3;
     box.shadow = new createjs.Shadow('#000000', -5, 3, 10);
-    stage.addChild(box);
+    container.addChild(box);
 
     var logo = new createjs.Bitmap(informantLogo);
     var scaleWidth = (boxWidth - padding*2) / logo.image.width;
@@ -148,7 +151,7 @@ function drawInfoBox(stage) {
     logo.scaleY = lScale;
     logo.x = (boxWidth - logo.image.width*lScale)/2 + boxX;
     logo.y = (boxHeight/3 - logo.image.height*lScale)/2 + boxY;
-    stage.addChild(logo);
+    container.addChild(logo);
 
     var info = new createjs.Text();
     info.set({
@@ -160,16 +163,15 @@ function drawInfoBox(stage) {
         x: boxWidth/2 + boxX,
         y: (boxHeight/3)/2 + boxY + (boxHeight*2)/3
     });
-    stage.addChild(info);
+    container.addChild(info);
 
-    // TODO: Don't add this to overall container
     var code = new createjs.Text('Room Code: ' + state.gameCode, 'bold 26px Play', '#ffA000');
     var cScale = (canvas.width*0.6)/(code.getBounds().width*2.5);
     code.scaleX = cScale;
     code.scaleY = cScale;
     code.x = canvas.width*0.7 - (code.getBounds().width*cScale)/2;
-    code.y = canvas.height*0.3 - (code.getBounds().height*cScale)/2 + padding/2;
-    stage.addChild(code);
+    code.y = canvas.height*0.3 - (code.getBounds().height*cScale)/2 + padding/10;
+    container.addChild(code);
 }
 
 function editPlayerBubble(bubble, radius, player) {
@@ -237,7 +239,7 @@ function editPlayerBubble(bubble, radius, player) {
     bubble.addChild(playerText);
 }
 
-function drawBubbles(stage) {
+function drawBubbles(container) {
     var numBubbles = Math.min(Math.max(4, state.players.length+1), 8);
     var padding = Math.floor(canvas.width/(numBubbles*6));
     var blockWidth = (canvas.width - 2*padding)/numBubbles;
@@ -272,19 +274,42 @@ function drawBubbles(stage) {
         }
         bubble.x = padding + blockWidth*i + blockWidth/2;
         bubble.y = 0.8*canvas.height;
-        stage.addChild(bubble);
+        container.addChild(bubble);
     }
 }
 
-function drawLobbyPage(stage) {
-    drawBackground(stage);
-    drawBomb(stage);
-    drawInfoBox(stage);
-    drawBubbles(stage);
+function drawLobbyPage() {
+    lobbyContainer = new createjs.Container();
+    drawBackground(lobbyContainer);
+    drawBomb(lobbyContainer);
+    drawInfoBox(lobbyContainer);
+    drawBubbles(lobbyContainer);
+    stage.addChild(lobbyContainer);
+}
+
+function animateLobbyPage(callback) {
+    lobbyContainer.x = canvas.width*0.20;
+    lobbyContainer.y = canvas.height*0.25;
+    lobbyContainer.regX = canvas.width*0.20;
+    lobbyContainer.regY = canvas.height*0.25;
+    var time = 0;
+    createjs.Ticker.setFPS(30);
+    createjs.Ticker.removeAllEventListeners();
+    createjs.Ticker.addEventListener('tick', function() {
+        lobbyContainer.rotation -= 0.46;
+        lobbyContainer.scaleX += 0.00003*time*time;
+        lobbyContainer.scaleY += 0.00003*time*time;
+        stage.update();
+        time += 1;
+        if (lobbyContainer.rotation <= -62) {
+            createjs.Ticker.removeAllEventListeners();
+            callback();
+        }
+    });
 }
 
 function playLobbyMusic() {
-    createjs.Sound.play('lobbyMusic', {loop: -1});
+    //createjs.Sound.play('lobbyMusic', {loop: -1});
 }
 
 function playJoinSound(userid) {
@@ -292,8 +317,10 @@ function playJoinSound(userid) {
 }
 
 function draw() {
-    var stage = new createjs.Stage('infCanvas');
-    drawLobbyPage(stage);
+    stage.removeAllChildren();
+    if (state.screen == ScreenEnum.LOBBY) {
+        drawLobbyPage();
+    }
     stage.update();
 }
 
