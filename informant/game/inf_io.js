@@ -19,13 +19,26 @@ $(function() {
         state.addUser(data.userid, data.username);
         update(state);
         playJoinSound(data.userid);
+        socket.emit('update players', {
+            players: state.players
+        });
     });
 
     socket.on('user left', function(data) {
-        //state.removeUser(data.userid);
-        //update(state);
+        state.removeUser(data.userid);
+        state.screen = ScreenEnum.LOBBY;
+        update(state);
+        if (state.players.length > 0) {
+            socket.emit('update players', {
+                players: state.players
+            });
+        }
+    });
+
+    socket.on('start game', function(data) {
         animateLobbyPage(function() {
             state.screen = ScreenEnum.BOMB_OVERVIEW;
+            update(state);
         });
     });
 });

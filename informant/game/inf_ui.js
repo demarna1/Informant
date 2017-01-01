@@ -296,12 +296,14 @@ function animateLobbyPage(callback) {
     createjs.Ticker.setFPS(30);
     createjs.Ticker.removeAllEventListeners();
     createjs.Ticker.addEventListener('tick', function() {
-        lobbyContainer.rotation -= 0.46;
+        if (lobbyContainer.rotation > -62) {
+            lobbyContainer.rotation -= 0.46;
+        }
         lobbyContainer.scaleX += 0.00003*time*time;
         lobbyContainer.scaleY += 0.00003*time*time;
         stage.update();
         time += 1;
-        if (lobbyContainer.rotation <= -62) {
+        if (time >= 160) {
             createjs.Ticker.removeAllEventListeners();
             callback();
         }

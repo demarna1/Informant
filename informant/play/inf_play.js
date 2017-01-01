@@ -30,4 +30,8 @@ $(function() {
         alert('Host from room ' + data.gameCode + ' has disconnected');
         window.location.replace('/');
     });
+
+    socket.on('update players', function(data) {
+        console.log('got update');
+    });
 });

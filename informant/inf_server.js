@@ -68,5 +68,12 @@ exports.addListener = function(io) {
                 addedGame = false;
             }
         });
+
+        // The host updated the player manifest
+        socket.on('update players', function(data) {
+            socket.broadcast.to(socket.gameCode).emit('update players', {
+                enabled: data.enabled
+            });
+        });
     });
 };

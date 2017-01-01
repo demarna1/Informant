@@ -1,6 +1,6 @@
 ScreenEnum = {
     LOBBY: 0,
-    BOMB_OVERVIEW: 0
+    BOMB_OVERVIEW: 1
 }
 
 function State(gameCode) {
@@ -18,9 +18,13 @@ State.prototype.addUser = function(userid, username) {
     this.players.push({
         userid: userid,
         username: username,
+        gameMaster: false,
         color: this.colors.splice(rindex, 1)[0],
         sound: this.sounds.splice(rindex, 1)[0]
     });
+    if (this.players.length == 1) {
+        this.players[0].gameMaster = true;
+    }
 };
 
 State.prototype.removeUser = function(userid) {
@@ -31,9 +35,12 @@ State.prototype.removeUser = function(userid) {
         }
     }
     if (indexToRemove > -1) {
-        this.colors.push(this.players[indexToRemove].color);
-        this.sounds.push(this.players[indexToRemove].sound);
-        this.players.splice(indexToRemove, 1);
+        var removedPlayer = this.players.splice(indexToRemove, 1)[0];
+        this.colors.push(removedPlayer.color);
+        this.sounds.push(removedPlayer.sound);
+        if (removedPlayer.gameMaster) {
+            this.players[0].gameMaster = true;
+        }
     }
 };
 
