@@ -206,9 +206,6 @@ function editPlayerBubble(bubble, radius, player) {
         case 'red':
             scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0, 0)];
             break;
-        case 'white':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 255, 0)];
-            break;
         case 'magenta':
             scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 255, 0)];
             break;

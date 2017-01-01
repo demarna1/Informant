@@ -38,7 +38,7 @@ State.prototype.removeUser = function(userid) {
         var removedPlayer = this.players.splice(indexToRemove, 1)[0];
         this.colors.push(removedPlayer.color);
         this.sounds.push(removedPlayer.sound);
-        if (removedPlayer.gameMaster) {
+        if (removedPlayer.gameMaster && this.players.length >= 1) {
             this.players[0].gameMaster = true;
         }
     }

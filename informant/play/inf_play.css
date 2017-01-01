@@ -1,11 +1,12 @@
-.header {
-  padding: 5px;
-  background-color: #ccc;
-  overflow: hidden;
+* {
+    margin: 0;
 }
 
-.headerCenter {
-  padding: 5px;
-  text-align: center;
-  font-weight: 600;
+.header {
+    padding: 15px;
+    background-color: #ccc;
+    text-align: center;
+    font-family: "Play";
+    font-size: x-large;
+    font-weight: bold;
 }

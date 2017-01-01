@@ -1,6 +1,7 @@
 $(function() {
     // Other jQuery elements
-    var $headerCenter = $('.headerCenter');
+    var $header = $('.header');
+    var $body = $('body');
 
     // State variables
     var socket = io('/informant');
@@ -23,7 +24,7 @@ $(function() {
             gameCode: getUrlParameter('gameCode'),
             username: username
         });
-        $headerCenter.text('Welcome, ' + username + '!');
+        $header.text('Welcome, ' + username + '!');
     });
 
     socket.on('host left', function(data) {
@@ -32,6 +33,52 @@ $(function() {
     });
 
     socket.on('update players', function(data) {
-        console.log('got update');
+        for (var i = 0; i < data.players.length; i++) {
+            var player = data.players[i];
+            if (player.userid.indexOf(socket.id) !== -1) {
+                switch (player.color) {
+                    case 'blue':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#0000FF');
+                        $body.css('background-color', '#5555FF');
+                        break;
+                    case 'yellow':
+                        $header.css('color', 'black');
+                        $header.css('background-color', '#FFFF00');
+                        $body.css('background-color', '#FFFF55');
+                        break;
+                    case 'orange':
+                        $header.css('color', 'black');
+                        $header.css('background-color', '#FF8000');
+                        $body.css('background-color', '#FFA033');
+                        break;
+                    case 'green':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#00FF00');
+                        $body.css('background-color', '#55FF55');
+                        break;
+                    case 'red':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#FF0000');
+                        $body.css('background-color', '#FF5555');
+                        break;
+                    case 'magenta':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#FF00FF');
+                        $body.css('background-color', '#FF55FF');
+                        break;
+                    case 'black':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#000000');
+                        $body.css('background-color', '#555555');
+                        break;
+                    case 'brown':
+                        $header.css('color', 'white');
+                        $header.css('background-color', '#906030');
+                        $body.css('background-color', '#A08050');
+                        break;
+                }
+            }
+        }
     });
 });
