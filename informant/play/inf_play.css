@@ -1,12 +1,24 @@
 * {
     margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+.inf-text-style {
+    font-family: "Play";
 }
 
 .header {
     padding: 15px;
     background-color: #ccc;
     text-align: center;
-    font-family: "Play";
     font-size: x-large;
     font-weight: bold;
+}
+
+.master-container {
+    display: none;
 }

@@ -12,7 +12,7 @@ $(function() {
         console.log('new game code = ' + data.gameCode);
         state = new State(data.gameCode);
         update(state);
-        playLobbyMusic();
+        playLobbyMusic(true);
     });
 
     socket.on('user joined', function(data) {
@@ -42,6 +42,7 @@ $(function() {
     });
 
     socket.on('start game', function(data) {
+        playLobbyMusic(false);
         animateLobbyPage(function() {
             state.screen = ScreenEnum.BOMB_OVERVIEW;
             update(state);

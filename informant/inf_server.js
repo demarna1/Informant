@@ -77,5 +77,10 @@ exports.addListener = function(io) {
                 players: data.players
             });
         });
+
+        // The players have started the game
+        socket.on('start game', function() {
+            socket.broadcast.to(socket.gameid).emit('start game');
+        });
     });
 };

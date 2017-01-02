@@ -294,8 +294,12 @@ function animateLobbyPage(callback) {
     });
 }
 
-function playLobbyMusic() {
-    //createjs.Sound.play('lobbyMusic', {loop: -1});
+function playLobbyMusic(start) {
+    if (start) {
+        createjs.Sound.play('lobbyMusic', {loop: -1});
+    } else {
+        createjs.Sound.stop();
+    }
 }
 
 function playJoinSound(userid) {
