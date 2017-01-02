@@ -8,7 +8,7 @@ function State(gameCode) {
     this.screen = ScreenEnum.LOBBY;
     this.players = [];
     this.colors = ['blue', 'yellow', 'orange', 'green',
-        'red', 'magenta', 'black', 'brown'];
+        'red', 'purple', 'black', 'brown'];
     this.sounds = ['whoosh', 'ding', 'sudden-impact', 'splish',
         'punch', 'transition-whoosh', 'toasty', 'bronx-cheer'];
 }

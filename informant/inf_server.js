@@ -4,8 +4,6 @@ exports.rooms = {};
 exports.addListener = function(io) {
     var namespace = io.of('/informant');
     namespace.on('connection', function(socket) {
-        var addedUser = false;
-        var addedGame = false;
 
         function generateGameCode() {
             var text = '';
@@ -18,11 +16,11 @@ exports.addListener = function(io) {
 
         // The host wants to create a new game
         socket.on('new game', function() {
-            addedGame = true;
             var gameCode = generateGameCode();
             exports.rooms[gameCode] = socket.id;
             socket.join(gameCode);
             socket.gameCode = gameCode;
+            socket.user = false;
             console.log('INF game host ' + gameCode + ' created');
             socket.emit('code created', {
                 gameCode: gameCode
@@ -37,10 +35,10 @@ exports.addListener = function(io) {
                     gameCode: gameCode
                 });
             } else {
-                addedUser = true;
                 socket.join(gameCode);
-                console.log('INF player ' + data.username + ' joined ' + gameCode);
                 socket.gameCode = gameCode;
+                socket.user = true;
+                console.log('INF player ' + data.username + ' joined ' + gameCode);
                 var gameid = exports.rooms[gameCode];
                 socket.gameid = gameid;
                 socket.broadcast.to(gameid).emit('user joined', {
@@ -51,22 +49,26 @@ exports.addListener = function(io) {
         });
 
         // The host or player has disconnected
-        socket.on('disconnect', function(data) {
-            if (addedUser) {
+        socket.on('disconnect', function() {
+            if (socket.user) {
                 console.log('INF player left room');
                 socket.broadcast.to(socket.gameid).emit('user left', {
                     userid: socket.id
                 });
-                addedUser = false;
-            }
-            if (addedGame) {
-                delete exports.rooms[socket.gameCode];
+            } else {
                 console.log('INF game host ' + socket.gameCode + ' disconnected');
+                delete exports.rooms[socket.gameCode];
                 socket.broadcast.to(socket.gameCode).emit('host left', {
                     gameCode: socket.gameCode
                 });
-                addedGame = false;
             }
+        });
+
+        // The player was rejected because the room was full
+        socket.on('lobby full', function(data) {
+            socket.broadcast.to(data.userid).emit('lobby full', {
+                gameCode: socket.gameCode
+            });
         });
 
         // The host updated the player manifest

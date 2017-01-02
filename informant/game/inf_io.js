@@ -16,12 +16,18 @@ $(function() {
     });
 
     socket.on('user joined', function(data) {
-        state.addUser(data.userid, data.username);
-        update(state);
-        playJoinSound(data.userid);
-        socket.emit('update players', {
-            players: state.players
-        });
+        if (state.players.length < 8) {
+            state.addUser(data.userid, data.username);
+            update(state);
+            playJoinSound(data.userid);
+            socket.emit('update players', {
+                players: state.players
+            });
+        } else {
+            socket.emit('lobby full', {
+                userid: data.userid
+            });
+        }
     });
 
     socket.on('user left', function(data) {

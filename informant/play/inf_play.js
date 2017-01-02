@@ -28,7 +28,12 @@ $(function() {
     });
 
     socket.on('host left', function(data) {
-        alert('Host from room ' + data.gameCode + ' has disconnected');
+        alert('Informant room ' + data.gameCode + ' has disconnected');
+        window.location.replace('/');
+    });
+
+    socket.on('lobby full', function(data) {
+        alert('Informant room ' + data.gameCode + ' is full');
         window.location.replace('/');
     });
 
@@ -39,43 +44,43 @@ $(function() {
                 switch (player.color) {
                     case 'blue':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#0000FF');
-                        $body.css('background-color', '#5555FF');
+                        $header.css('background-color', '#0f2baa');
+                        $body.css('background-color', '#3f5bda');
                         break;
                     case 'yellow':
                         $header.css('color', 'black');
-                        $header.css('background-color', '#FFFF00');
-                        $body.css('background-color', '#FFFF55');
+                        $header.css('background-color', '#ffff00');
+                        $body.css('background-color', '#ffff80');
                         break;
                     case 'orange':
                         $header.css('color', 'black');
-                        $header.css('background-color', '#FF8000');
-                        $body.css('background-color', '#FFA033');
+                        $header.css('background-color', '#ff8800');
+                        $body.css('background-color', '#faa443');
                         break;
                     case 'green':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#00FF00');
-                        $body.css('background-color', '#55FF55');
+                        $header.css('background-color', '#14a30d');
+                        $body.css('background-color', '#44d33d');
                         break;
                     case 'red':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#FF0000');
-                        $body.css('background-color', '#FF5555');
+                        $header.css('background-color', '#e81010');
+                        $body.css('background-color', '#f25757');
                         break;
-                    case 'magenta':
+                    case 'purple':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#FF00FF');
-                        $body.css('background-color', '#FF55FF');
+                        $header.css('background-color', '#c018c0');
+                        $body.css('background-color', '#e850e8');
                         break;
                     case 'black':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#000000');
-                        $body.css('background-color', '#555555');
+                        $header.css('background-color', '#101010');
+                        $body.css('background-color', '#404040');
                         break;
                     case 'brown':
                         $header.css('color', 'white');
-                        $header.css('background-color', '#906030');
-                        $body.css('background-color', '#A08050');
+                        $header.css('background-color', '#805020');
+                        $body.css('background-color', '#a08050');
                         break;
                 }
             }

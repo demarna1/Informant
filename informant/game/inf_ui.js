@@ -13,6 +13,18 @@ var scissorsColorOpen = null;
 var scissorsFrameOpen = null;
 var lobbyContainer = null;
 
+// Color filters
+var colorFilters = {
+    'blue': new createjs.ColorFilter(0, 0, 0, 1, 15, 43, 170, 0),
+    'yellow': new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 0, 0),
+    'orange': new createjs.ColorFilter(0, 0, 0, 1, 255, 136, 0, 0),
+    'green': new createjs.ColorFilter(0, 0, 0, 1, 20, 163, 13, 0),
+    'red': new createjs.ColorFilter(0, 0, 0, 1, 232, 16, 16, 0),
+    'purple': new createjs.ColorFilter(0, 0, 0, 1, 192, 24, 192, 0),
+    'black': new createjs.ColorFilter(0, 0, 0, 1, 16, 16, 16, 0),
+    'brown': new createjs.ColorFilter(0, 0, 0, 1, 128, 80, 32, 0)
+};
+
 // Load game assets
 function loadGame(callback) {
     // Set initial canvas dimensions
@@ -190,32 +202,7 @@ function editPlayerBubble(bubble, radius, player) {
     var gap = Math.max(0, ((s - (playerText.getBounds().height * textScale)) -
         (-s + scissors.image.height*scissorsScale)) - 8);
 
-    switch (player.color) {
-        case 'blue':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 255, 0)];
-            break;
-        case 'yellow':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 0, 0)];
-            break;
-        case 'orange':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 165, 0, 0)];
-            break;
-        case 'green':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 255, 0, 0)];
-            break;
-        case 'red':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0, 0)];
-            break;
-        case 'magenta':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 255, 0)];
-            break;
-        case 'black':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 0, 0, 0, 0)];
-            break;
-        case 'brown':
-            scissors.filters = [new createjs.ColorFilter(0, 0, 0, 1, 150, 100, 50, 0)];
-            break;
-    }
+    scissors.filters = [colorFilters[player.color]];
     scissors.cache(0, 0, scissors.image.width, scissors.image.height);
     scissors.scaleX = scissorsScale;
     scissors.scaleY = scissorsScale;
