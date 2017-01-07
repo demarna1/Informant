@@ -1,123 +1,99 @@
 #!/usr/bin/python
+import argparse
+import logging
 import random
-import sys
 
-print '-----------------'
-print '-- BOMB DEFUSE --'
-print '-----------------'
+log = logging.getLogger()
 
-debug = False
+# Game roles: either spy or informant
+#
+#                      misinformed  effective
+#  players    spies       rate        rate
+#     4         1        3 @ 25%       75%
+#     5        1.5       3 @ 10%       30%
+#                        4 @ 30%      120%
+#     6         2        4 @ 20%       80%
+#     7         2        5 @ 25%      125%
+#     8         2        6 @ 30%      180%
+def getPlayersAndRoles(numPlayers):
+    # Create player list
+    playerList = ['Noah', 'Joelle', 'Brett', 'Jackie', 'Mark', 'Bre', 'John', 'Elena']
+    players = playerList[:numPlayers]
+    random.shuffle(players)
 
-# 5 Rounds, each round has:
+    # Role probabilities
+    roleRates = {
+        4: [(1, 0.25)],
+        5: [(1, 0.30), (2, 0.10)],
+        6: [(2, 0.20)],
+        7: [(2, 0.25)],
+        8: [(2, 0.30)]
+    }
+
+    # Choose spies and informants
+    roleRate = random.choice(roleRates[numPlayers])
+    numSpies = roleRate[0]
+    roles = {}
+    for p in players[:numSpies]:
+        roles[p] = 'spy'
+    for p in players[numSpies:]:
+        roles[p] = 'informant'
+    log.debug('spies = {}, informants = {}'.format(players[:numSpies], players[numSpies:]))
+    return (players, roles, roleRate[1])
+
+# TODO Each round has:
 #  1 bad wire
 #  1-2 good wires
 #  0-1 dead wires
-num_rounds = 5
-color_ids = [1, 2, 4, 5, 7]
-wire_colors = {1:'red', 2:'green', 4:'blue', 5:'purple', 7:'white'}
-wire_states = ['good', 'dead', 'bad']
+#color_ids = [1, 2, 4, 5, 7]
+#wire_colors = {1:'red', 2:'green', 4:'blue', 5:'purple', 7:'white'}
+#wire_states = ['good', 'dead', 'bad']
+def doRound(defuser, blockIndex):
+    log.info('Block {}:'.format(blockIndex+1))
+    log.info('  {} is the defuser'.format(defuser))
+    raw_input('  <enter> to continue\n')
+    return 'pass'
 
-# Assume 5 players for now
-# Game roles:
-#  1 Spy
-#  4 Informants
-players = ['Brett', 'Noah', 'Joelle', 'Mark', 'Jack']
-random.shuffle(players)
-spy = players[0]
-informants = players[1:]
-if debug:
-    print '{} is the spy\n'.format(spy)
+def main():
+    # Process arguments
+    parser = argparse.ArgumentParser(description='Bomb Defuse')
+    parser.add_argument('numPlayers', metavar='N', type=int, help='number of players')
+    parser.add_argument('-d', '--debug', action='store_true', help='debugging')
+    args = parser.parse_args()
+    logLevel = logging.DEBUG if args.debug else logging.INFO
+    logging.basicConfig(format='%(message)s', level=logLevel)
+    if args.numPlayers < 4 or args.numPlayers > 8:
+        log.error('This game only supports 4 to 8 players')
+        return
 
-# Shuffle again and we'll rotate who's being the defuser
-random.shuffle(players)
-for i in range(num_rounds):
-    print 'Round {}:'.format(i+1)
+    log.info('-----------------')
+    log.info('   BOMB DEFUSE   ')
+    log.info('-----------------')
 
-    # Choose the defuser for the round
-    defuser = players[i % len(players)]
-    print '  {} is the defuser'.format(defuser)
+    (players, roles, missRate) = getPlayersAndRoles(args.numPlayers)
 
-    # Choose the wires - 3 per round for now
-    random.shuffle(color_ids)
-    colors = color_ids[0:3]
-    print '  Wires: \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m'.format(colors[0], colors[1], colors[2])
-    random.shuffle(wire_states)
-    if debug:
-        print '         {} {} {}'.format(wire_states[0][0], wire_states[1][0], wire_states[2][0])
+    # Rotate who's being the defuser
+    round = 0
+    numDefused = 0
+    numBlown = 0
+    while True:
+        if round % len(players) == 0:
+            random.shuffle(players)
+        defuser = players[round % len(players)]
+        result = doRound(defuser, round % 5)
+        if result == 'defused':
+            numDefused += 1
+        elif result == 'blown':
+            numBlown += 1
+        round += 1
 
-    # Populate the possible hints
-    for index, state in enumerate(wire_states):
-        if state == 'good':
-            good_wire = colors[index]
-        elif state == 'dead':
-            dead_wire = colors[index]
-        else:
-            bad_wire = colors[index]
-    spy_hint = '{} wire is bad'.format(wire_colors[bad_wire])
-    informed_hints = [
-        '{} wire is good'.format(wire_colors[good_wire]),
-        '{} wire is dead'.format(wire_colors[dead_wire])
-    ]
-    misinformed_hints = [
-        '{} wire is good'.format(wire_colors[dead_wire]),
-        '{} wire is good'.format(wire_colors[bad_wire]),
-        '{} wire is dead'.format(wire_colors[good_wire]),
-        '{} wire is dead'.format(wire_colors[bad_wire])
-    ]
+        # Check bomb status
+        if numDefused >= 3:
+            log.info('YAY, bomb is defused')
+            break;
+        elif numBlown >= 3:
+            log.info('BOOM! bomb has detonated')
+            break;
 
-    # Round roles:
-    #  1   Defuser
-    #  0-1 Spies
-    #  2-3 Informants
-    #  1   Misinformed
-    round_spies = []
-    round_informants = []
-    round_misinformed = []
-    random.shuffle(informants)
-    if defuser == spy:
-        round_misinformed.extend(informants[0:2])
-        round_informants.extend(informants[2:])
-    else:
-        round_spies.append(spy)
-        informants.remove(defuser)
-        round_misinformed.append(informants[0])
-        round_informants.extend(informants[1:])
-        informants.append(defuser)
-
-    # The players tell the defuser which wire should be cut
-    if debug:
-        for inf in round_informants:
-            print '    {} is informed, thinks the {}'.format(inf, random.choice(informed_hints))
-        for minf in round_misinformed:
-            print '    {} is misinformed, thinks the {}'.format(minf, random.choice(misinformed_hints))
-        for s in round_spies:
-            print '    {} is the spy, knows the {}'.format(s, spy_hint)
-    else:
-        round_players = []
-        for inf in round_informants:
-            round_players.append((inf, random.choice(informed_hints)))
-        for minf in round_misinformed:
-            round_players.append((minf, random.choice(misinformed_hints)))
-        for s in round_spies:
-            round_players.append((s, random.choice(misinformed_hints)))
-        random.shuffle(round_players)
-        for rp in round_players:
-            print '    {} thinks the {}'.format(rp[0], rp[1])
-
-    # The defuser cuts wires until the good wire neutralizes the bomb
-    # or the bad wire blows up the bomb
-    round_finished = False
-    while not round_finished:
-        wire_to_cut = raw_input("  Wire to cut: ")
-        if wire_to_cut[0] == wire_colors[good_wire][0]:
-            print "  You cut the {} wire, which neutralized the bomb, congrats!".format(wire_colors[good_wire])
-            round_finished = True
-        elif wire_to_cut[0] == wire_colors[dead_wire][0]:
-            print "  You cut the {} wire, which did nothing, cut again...".format(wire_colors[dead_wire])
-        elif wire_to_cut[0] == wire_colors[bad_wire][0]:
-            print "  You cut the {} wire, which blew up the bomb :(".format(wire_colors[bad_wire])
-            round_finished = True
-        else:
-            print "  You typed an invalid color, cut again..."
-    raw_input("  ENTER to continue\n")
-
+if __name__ == '__main__':
+    main()
