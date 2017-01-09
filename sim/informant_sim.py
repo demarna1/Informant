@@ -83,10 +83,10 @@ def getRoundRoles(round, roles, misRate):
     return roundRoles
 
 
-# TODO Each round has:
+# Each round has:
 #  1 bad wire
-#  1-2 good wires
-#  0-1 dead wires
+#  1 good wire
+#  1 dead wire
 def doRound(roundRoles, blockIndex):
     log.info('Block {}:'.format(blockIndex+1))
     log.info('  {} is the defuser'.format(roundRoles['defuser']))
@@ -98,13 +98,62 @@ def doRound(roundRoles, blockIndex):
     wireColors = {1:'red', 2:'green', 4:'blue', 5:'purple', 7:'white'}
     wireStates = ['good', 'dead', 'bad']
     random.shuffle(colorIds)
-    colors = colorIds[0:3]
-    log.info('  Wires: \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m'.format(colors[0], colors[1], colors[2]))
+    log.info('  Wires: \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m \033[1;3{}m|\033[0m'.format(colorIds[0], colorIds[1], colorIds[2]))
     random.shuffle(wireStates)
     log.debug('         {} {} {}'.format(wireStates[0][0], wireStates[1][0], wireStates[2][0]))
 
-    raw_input('  <enter> to continue\n')
-    return 'pass'
+    # Populate the possible hints
+    for index, state in enumerate(wireStates):
+        if state == 'good':
+            goodWire = colorIds[index]
+        elif state == 'dead':
+            deadWire = colorIds[index]
+        else:
+            badWire = colorIds[index]
+    spyHint = '{} wire is bad'.format(wireColors[badWire])
+    informedHints = [
+        '{} wire is good'.format(wireColors[goodWire]),
+        '{} wire is dead'.format(wireColors[deadWire])
+    ]
+    misinformedHints = [
+        '{} wire is good'.format(wireColors[deadWire]),
+        '{} wire is good'.format(wireColors[badWire]),
+        '{} wire is dead'.format(wireColors[goodWire]),
+        '{} wire is dead'.format(wireColors[badWire])
+    ]
+
+    # Players tell the defuser which wire should be cut
+    hints = []
+    for s in roundRoles['spies']:
+        hints.append((s, random.choice(misinformedHints)))
+        log.debug('    {} is the spy, knows the {}'.format(s, spyHint))
+    for inf in roundRoles['informants']:
+        hint = random.choice(informedHints)
+        hints.append((inf, hint))
+        log.debug('    {} is informed, thinks the {}'.format(inf, hint))
+    for minf in roundRoles['misinformed']:
+        hint = random.choice(misinformedHints)
+        hints.append((minf, hint))
+        log.debug('    {} is misinformed, thinks the {}'.format(minf, hint))
+    random.shuffle(hints)
+    for hint in hints:
+        log.info('    {} thinks the {}'.format(hint[0], hint[1]))
+
+    # The defuser cuts wires until the good wire neutralizes the bomb
+    # or the bad wire blows up the bomb
+    while True:
+        wireToCut = raw_input("  Wire to cut: ")
+        if wireToCut[0] == wireColors[goodWire][0]:
+            log.info('  You cut the {} wire, which neutralized the block!'.format(wireColors[goodWire]))
+            return 'defused'
+        elif wireToCut[0] == wireColors[badWire][0]:
+            log.info('  You cut the {} wire, which triggered the block'.format(wireColors[badWire]))
+            return 'blown'
+        elif wireToCut[0] == wireColors[deadWire][0]:
+            log.info('  You cut the {} wire, which did nothing, cut again...'.format(wireColors[deadWire]))
+        else:
+            log.info('  You typed an invalid color, cut again...')
+
 
 def main():
     # Process arguments
@@ -142,11 +191,14 @@ def main():
 
         # Check bomb status
         if numDefused >= 3:
-            log.info('YAY, bomb is defused')
+            log.info('YAY! Bomb defused')
             break;
         elif numBlown >= 3:
-            log.info('BOOM! bomb has detonated')
+            log.info('BOOM! Bomb detonated')
             break;
+        raw_input('  <enter> to continue\n')
+    log.info('The spies were {}'.format(roles['spies']))
+
 
 if __name__ == '__main__':
     main()
