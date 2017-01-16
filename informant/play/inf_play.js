@@ -12,7 +12,7 @@ $(function() {
     // Colors
     var colorGamut = {
         'blue': { 'text': 'white', 'primary': '#0f2baa', 'secondary': '#3f5bda' },
-        'yellow': { 'text': 'black', 'primary': '#ffff00', 'secondary': '#ffffd0' },
+        'yellow': { 'text': 'black', 'primary': '#ffff00', 'secondary': '#404040' },
         'orange': { 'text': 'black', 'primary': '#ff8800', 'secondary': '#faa443' },
         'green': { 'text': 'white', 'primary': '#14a30d', 'secondary': '#44d33d' },
         'red': { 'text': 'white', 'primary': '#e81010', 'secondary': '#f25757' },

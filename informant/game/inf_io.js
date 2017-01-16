@@ -12,7 +12,7 @@ $(function() {
         console.log('new game code = ' + data.gameCode);
         state = new State(data.gameCode);
         update(state);
-        playLobbyMusic(true);
+        //playLobbyMusic(true);
     });
 
     socket.on('user joined', function(data) {
@@ -32,7 +32,6 @@ $(function() {
 
     socket.on('user left', function(data) {
         state.removeUser(data.userid);
-        state.screen = ScreenEnum.LOBBY;
         update(state);
         if (state.players.length > 0) {
             socket.emit('update players', {
@@ -42,10 +41,12 @@ $(function() {
     });
 
     socket.on('start game', function(data) {
-        playLobbyMusic(false);
+        //playLobbyMusic(false);
         animateLobbyPage(function() {
-            state.screen = ScreenEnum.BOMB_OVERVIEW;
+            state.startGame();
             update(state);
+            socket.emit('assign roles', {
+            });
         });
     });
 });
