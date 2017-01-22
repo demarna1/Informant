@@ -24,6 +24,17 @@ app.get('/informant', function(req, res) {
     }
 });
 
+// Configure Word Blitz routes
+app.use(express.static(__dirname + '/wordblitz/game'));
+app.use(express.static(__dirname + '/wordblitz/play'));
+app.get('/wordblitz', function(req, res) {
+    if (req.query.gameCode && req.query.name) {
+        res.sendFile(path.resolve('wordblitz/play/wb_play.html'));
+    } else {
+        res.sendFile(path.resolve('wordblitz/game/wb_game.html'));
+    }
+});
+
 // Configure Cards Against Humanity routes
 app.use(express.static(__dirname + '/cah/game'));
 app.use(express.static(__dirname + '/cah/play'));
@@ -44,23 +55,30 @@ nodeServer.listen(nodePort, function() {
 // Create socket.io servers for each game
 var io = require('socket.io')(nodeServer);
 var infServer = require('./informant/inf_server.js');
+var wbServer = require('./wordblitz/wb_server.js');
 var cahServer = require('./cah/cah_server.js');
 infServer.addListener(io);
+wbServer.addListener(io);
 cahServer.addListener(io);
 
 // Redirect to proper page on user login
 app.get('/play', function(req, res) {
     var gameCode = req.query.gameCode;
     var name = req.query.name;
-    if (gameCode in cahServer.rooms) {
-        res.json({
-            'result': 'success',
-            'url': '/cah'
-        });
-    } else if (gameCode in infServer.rooms) {
+    if (gameCode in infServer.rooms) {
         res.json({
             'result': 'success',
             'url': '/informant'
+        });
+    } else if (gameCode in wbServer.rooms) {
+        res.json({
+            'result': 'success',
+            'url': '/wordblitz'
+        });
+    } else if (gameCode in cahServer.rooms) {
+        res.json({
+            'result': 'success',
+            'url': '/cah'
         });
     } else {
         res.json({'result': 'error'});
