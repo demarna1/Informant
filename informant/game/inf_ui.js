@@ -36,7 +36,7 @@ function loadGame(callback) {
     // Progress bar initialization
     var progressText = new createjs.Text();
     progressText.set({
-        text: 'Progress: 0%',
+        text: '0% Loaded',
         font: '26px Play',
         color: '#000000',
         textAlign: 'center',
@@ -96,7 +96,7 @@ function loadGame(callback) {
         scissorsColorOpen = queue.getResult('scissorsColorOpen');
         scissorsFrameOpen = queue.getResult('scissorsFrameOpen');
 
-        // Get the canvas and set resize listener
+        // Set resize listener
         state = new State('????');
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();

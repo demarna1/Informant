@@ -3,9 +3,9 @@ $(function() {
     var state = null;
 
     socket.on('connect', function() {
-        //loadGame(function() {
+        loadGame(function() {
             socket.emit('new game');
-        //});
+        });
     });
 
     socket.on('code created', function(data) {

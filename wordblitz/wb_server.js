@@ -14,6 +14,7 @@ exports.addListener = function(io) {
             return text;
         }
 
+        // The host wants to create a new game
         socket.on('new game', function() {
             var gameCode = generateGameCode();
             exports.rooms[gameCode] = socket.id;
@@ -24,6 +25,24 @@ exports.addListener = function(io) {
             socket.emit('code created', {
                 gameCode: gameCode
             });
+        });
+
+        // The player wants to join a room
+        socket.on('new user', function(data) {
+
+        });
+
+        // The host or player has disconnected
+        socket.on('disconnect', function() {
+            if (socket.user) {
+
+            } else {
+                console.log('WB game host ' + socket.gameCode + ' disconnected');
+                delete exports.rooms[socket.gameCode];
+                socket.broadcast.to(socket.gameCode).emit('host left', {
+                    gameCode: socket.gameCode
+                });
+            }
         });
     });
 };
