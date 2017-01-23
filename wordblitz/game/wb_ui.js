@@ -2,6 +2,12 @@
 var canvas = null;
 var stage = null;
 
+// Cached state (for resizing events)
+var state = null;
+
+// Game assets
+var chalkboardBackground = null;
+
 // Load game assets
 function loadGame(callback) {
     // Set initial canvas dimensions
@@ -41,7 +47,7 @@ function loadGame(callback) {
     queue.on('progress', handleProgress);
     queue.on('complete', handleComplete);
     queue.loadManifest([
-        { id: 'lobbyMusic', src: '/sound/lobby-music.mp3' }
+        { id: 'chalkboardBackground', src: '/img/ChalkboardBackground.png' }
     ]);
 
     function handleProgress() {
@@ -52,7 +58,11 @@ function loadGame(callback) {
     }
 
     function handleComplete() {
+        // Get image handles and create bitmaps
+        chalkboardBackground = queue.getResult('chalkboardBackground');
+
         // Set resize listener
+        state = new State('????');
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
@@ -67,7 +77,24 @@ function loadGame(callback) {
     }
 }
 
+function drawBackground() {
+    var bg = new createjs.Bitmap(chalkboardBackground);
+    bg.scaleX = canvas.width / bg.image.width;
+    bg.scaleY = canvas.height / bg.image.height;
+    stage.addChild(bg);
+}
+
+function drawLobbyPage() {
+    drawBackground();
+}
+
 function draw() {
     stage.removeAllChildren();
+    drawLobbyPage();
     stage.update();
+}
+
+function update(newState) {
+    state = newState;
+    draw();
 }
