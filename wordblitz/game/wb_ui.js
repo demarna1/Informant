@@ -2,7 +2,7 @@
 var canvas = null;
 var stage = null;
 
-// Cached state (for resizing events)
+// Cached state
 var state = null;
 
 // Game assets
@@ -77,49 +77,52 @@ function loadGame(callback) {
     }
 }
 
-function drawPlayerNames(player, index) {
-    var text = new createjs.Text();
-    text.set({
-        text: player.username.substr(0, 1),
-        font: '50px Eraser',
-        x: 30,
-        y: 100 + 100*index
-    });
+function drawPlayerNames() {
+    for (var i = 0; i < state.players.length; i++) {
+        var player = state.players[i];
 
-    switch (player.color) {
-    case 'skyblue':
-        text.color = '#bbddff';
-        break;
-    case 'lime':
-        text.color = '#ccffbb';
-        break;
-    case 'orange':
-        text.color = '#ffdd88';
-        break;
-    case 'pink':
-        text.color = '#ffbbbb';
-        break;
-    }
-
-    stage.addChild(text);
-
-    var numChars = 1;
-    createjs.Ticker.setFPS(3);
-    createjs.Ticker.removeAllEventListeners();
-    createjs.Ticker.addEventListener('tick', function() {
-        text.text = player.username.substr(0, numChars);
-        stage.update();
-        numChars += 1;
-        if (numChars > player.username.length) {
-            createjs.Ticker.removeAllEventListeners();
+        var text = new createjs.Text();
+        text.set({
+            text: player.dirty ? player.username.substr(0, 1) : player.username,
+            font: '50px Eraser',
+            x: 30,
+            y: 100 + 100*i
+        });
+        switch (player.color) {
+        case 'skyblue':
+            text.color = '#bbddff';
+            break;
+        case 'lime':
+            text.color = '#ccffbb';
+            break;
+        case 'orange':
+            text.color = '#ffdd88';
+            break;
+        case 'pink':
+            text.color = '#ffbbbb';
+            break;
         }
-    });
+
+        stage.addChild(text);
+
+        if (player.dirty) {
+            var numChars = 1;
+            createjs.Ticker.setFPS(3);
+            createjs.Ticker.addEventListener('tick', function(event) {
+                text.text = player.username.substr(0, numChars);
+                stage.update();
+                numChars += 1;
+                if (numChars > player.username.length) {
+                    event.remove();
+                    player.dirty = false;
+                }
+            });
+        }
+    }
 }
 
 function drawLobbyPage() {
-    for (var i = 0; i < state.players.length; i++) {
-        drawPlayerNames(state.players[i], i);
-    }
+    drawPlayerNames();
 }
 
 function draw() {

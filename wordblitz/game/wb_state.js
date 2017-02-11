@@ -15,6 +15,7 @@ State.prototype.addUser = function(userid, username) {
         userid: userid,
         username: username,
         gameMaster: false,
+        dirty: true,
         color: this.colors.splice(rindex, 1)[0]
     });
     if (this.players.length == 1) {
