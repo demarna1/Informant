@@ -5,8 +5,14 @@ body, html {
   padding: 0;
   overflow: hidden;
 }
+
 canvas {
   position: absolute;
   background-image: url("img/ChalkboardBackground.png");
   background-size: 100% 100%;
+}
+
+@font-face {
+    font-family: "Eraser";
+    src: url(fonts/Eraser.ttf);
 }

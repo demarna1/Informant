@@ -81,7 +81,7 @@ function drawPlayerNames(player, index) {
     var text = new createjs.Text();
     text.set({
         text: player.username.substr(0, 1),
-        font: '50px Chalkduster',
+        font: '50px Eraser',
         x: 30,
         y: 100 + 100*index
     });
