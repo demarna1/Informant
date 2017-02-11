@@ -7,5 +7,6 @@ body, html {
 }
 canvas {
   position: absolute;
-  background-color: #808080;
+  background-image: url("img/ChalkboardBackground.png");
+  background-size: 100% 100%;
 }

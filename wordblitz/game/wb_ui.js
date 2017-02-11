@@ -77,15 +77,49 @@ function loadGame(callback) {
     }
 }
 
-function drawBackground() {
-    var bg = new createjs.Bitmap(chalkboardBackground);
-    bg.scaleX = canvas.width / bg.image.width;
-    bg.scaleY = canvas.height / bg.image.height;
-    stage.addChild(bg);
+function drawPlayerNames(player, index) {
+    var text = new createjs.Text();
+    text.set({
+        text: player.username.substr(0, 1),
+        font: '50px Chalkduster',
+        x: 30,
+        y: 100 + 100*index
+    });
+
+    switch (player.color) {
+    case 'skyblue':
+        text.color = '#bbddff';
+        break;
+    case 'lime':
+        text.color = '#ccffbb';
+        break;
+    case 'orange':
+        text.color = '#ffdd88';
+        break;
+    case 'pink':
+        text.color = '#ffbbbb';
+        break;
+    }
+
+    stage.addChild(text);
+
+    var numChars = 1;
+    createjs.Ticker.setFPS(3);
+    createjs.Ticker.removeAllEventListeners();
+    createjs.Ticker.addEventListener('tick', function() {
+        text.text = player.username.substr(0, numChars);
+        stage.update();
+        numChars += 1;
+        if (numChars > player.username.length) {
+            createjs.Ticker.removeAllEventListeners();
+        }
+    });
 }
 
 function drawLobbyPage() {
-    drawBackground();
+    for (var i = 0; i < state.players.length; i++) {
+        drawPlayerNames(state.players[i], i);
+    }
 }
 
 function draw() {

@@ -11,10 +11,10 @@ $(function() {
 
     // Colors
     var colorGamut = {
-        'skyblue': { 'text': 'white', 'primary': '#0f2baa', 'secondary': '#3f5bda' },
-        'lime': { 'text': 'black', 'primary': '#ffff00', 'secondary': '#404040' },
-        'orange': { 'text': 'black', 'primary': '#ff8800', 'secondary': '#faa443' },
-        'pink': { 'text': 'white', 'primary': '#e81010', 'secondary': '#f25757' }
+        'skyblue': { 'primary': '#55aaff', 'secondary': '#bbddff' },
+        'lime': { 'primary': '#77cc66', 'secondary': '#ccffbb' },
+        'orange': { 'primary': '#eeaa22', 'secondary': '#ffdd88' },
+        'pink': { 'primary': '#ee7777', 'secondary': '#ffbbbb' }
     };
 
     function getUrlParameter(sParam) {
@@ -55,7 +55,7 @@ $(function() {
         for (var i = 0; i < data.players.length; i++) {
             var player = data.players[i];
             if (player.userid.indexOf(socket.id) !== -1) {
-                $header.css('color', colorGamut[player.color]['text']);
+                $header.css('color', 'white');
                 $header.css('background-color', colorGamut[player.color]['primary']);
                 $body.css('background-color', colorGamut[player.color]['secondary']);
                 if (player.gameMaster) {
