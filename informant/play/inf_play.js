@@ -11,14 +11,14 @@ $(function() {
 
     // Colors
     var colorGamut = {
-        'blue': { 'text': 'white', 'primary': '#0f2baa', 'secondary': '#3f5bda' },
-        'yellow': { 'text': 'black', 'primary': '#ffff00', 'secondary': '#404040' },
-        'orange': { 'text': 'black', 'primary': '#ff8800', 'secondary': '#faa443' },
-        'green': { 'text': 'white', 'primary': '#14a30d', 'secondary': '#44d33d' },
-        'red': { 'text': 'white', 'primary': '#e81010', 'secondary': '#f25757' },
-        'purple': { 'text': 'white', 'primary': '#c018c0', 'secondary': '#e850e8' },
-        'black': { 'text': 'white', 'primary': '#101010', 'secondary': '#404040' },
-        'brown': { 'text': 'white', 'primary': '#805020', 'secondary': '#a08050' }
+        'blue': { 'title':'white', 'primary':'#0f2baa', 'secondary':'#3f5bda' },
+        'yellow': { 'title':'black', 'primary':'#ffff00', 'secondary':'#404040' },
+        'orange': { 'title':'white', 'primary':'#ff8800', 'secondary':'#faa443' },
+        'green': { 'title':'white', 'primary':'#14a30d', 'secondary':'#54c34d' },
+        'red': { 'title':'white', 'primary':'#e81010', 'secondary':'#f25757' },
+        'purple': { 'title':'white', 'primary':'#c018c0', 'secondary':'#e850e8' },
+        'black': { 'title':'white', 'primary':'#101010', 'secondary':'#404040' },
+        'brown': { 'title':'white', 'primary':'#805020', 'secondary':'#a08050' }
     };
 
     function getUrlParameter(sParam) {
@@ -59,7 +59,7 @@ $(function() {
         for (var i = 0; i < data.players.length; i++) {
             var player = data.players[i];
             if (player.userid.indexOf(socket.id) !== -1) {
-                $header.css('color', colorGamut[player.color]['text']);
+                $header.css('color', colorGamut[player.color]['title']);
                 $header.css('background-color', colorGamut[player.color]['primary']);
                 $body.css('background-color', colorGamut[player.color]['secondary']);
                 if (player.gameMaster) {

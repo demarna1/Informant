@@ -21,8 +21,16 @@ ul {
 
 .master-container {
     display: none;
+    color: white;
+    font-size: large;
     margin-top: 20px;
     margin-bottom: 20px;
     padding-left: 30px;
     padding-right: 30px;
+}
+
+.master-button {
+    margin-top: 10px;
+    font-size: large;
+    padding: 10px;
 }
