@@ -89,11 +89,30 @@ function playChalkSound(numLetters) {
     }
 }
 
+function drawInfoBox() {
+    var label = 'game code:';
+    var labelText = new createjs.Text(label, '42px Eraser', '#ffffff');
+    var textScale = (canvas.width*0.22)/labelText.getBounds().width;
+    labelText.scaleX = labelText.scaleY = textScale;
+    labelText.x = canvas.width/2 - (labelText.getBounds().width*textScale)/2;
+    labelText.y = canvas.height*0.25;
+    stage.addChild(labelText);
+
+    var code = state.gameCode;
+    var codeText = new createjs.Text(code, '60px Eraser', '#ffffcc');
+    codeText.scaleX = codeText.scaleY = textScale;
+    codeText.x = canvas.width/2 - (codeText.getBounds().width*textScale)/2;
+    codeText.y = labelText.y + labelText.getBounds().height*textScale;
+    stage.addChild(codeText);
+}
+
 function drawTitle() {
     var title = 'WORD BLITZ';
-    var text = new createjs.Text(title, '80px Eraser', '#ffffff');
-    text.x = canvas.width/2 - text.getBounds().width/2;
-    text.y = 0;
+    var text = new createjs.Text(title, '60px Eraser', '#ffffff');
+    var textScale = (canvas.width*0.42)/text.getBounds().width;
+    text.scaleX = text.scaleY = textScale;
+    text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
+    text.y = canvas.height*0.04;
 
     if (state.transition == 0) {
         state.transition = 1;
@@ -127,8 +146,8 @@ function drawPlayerNames() {
         text.set({
             text: player.username,
             font: '50px Eraser',
-            x: 30,
-            y: 100 + 100*i
+            x: 50 + 200*(i%2),
+            y: 500 + 100*Math.floor(i/2)
         });
         switch (player.color) {
         case 'skyblue':
@@ -166,9 +185,9 @@ function drawPlayerNames() {
 }
 
 function drawLobbyPage() {
+    drawInfoBox();
     drawTitle();
     drawPlayerNames();
-    //drawInfoBox();
 }
 
 function update() {

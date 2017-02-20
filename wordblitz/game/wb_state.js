@@ -3,7 +3,7 @@ ScreenEnum = {
 }
 
 function State() {
-    this.gameCode = '';
+    this.gameCode = '????';
     this.screen = ScreenEnum.LOBBY;
     this.transition = 0;
     this.players = [];
