@@ -1,16 +1,16 @@
 $(function() {
     var socket = io('/wordblitz');
-    var state = null;
+    var state = new State();
 
     socket.on('connect', function() {
-        loadGame(function() {
+        loadGame(state, function() {
             socket.emit('new game');
         });
     });
 
     socket.on('code created', function(data) {
         console.log('new game code = ' + data.gameCode);
-        state = new State(data.gameCode);
+        state.gameCode = data.gameCode;
         update(state);
         //playLobbyMusic(true);
     });
@@ -19,7 +19,6 @@ $(function() {
         if (state.players.length < 4) {
             state.addUser(data.userid, data.username);
             update(state);
-            //playJoinSound();
             socket.emit('update players', {
                 players: state.players
             });

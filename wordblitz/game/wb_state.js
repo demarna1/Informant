@@ -2,9 +2,10 @@ ScreenEnum = {
     LOBBY: 0
 }
 
-function State(gameCode) {
-    this.gameCode = gameCode;
+function State() {
+    this.gameCode = '';
     this.screen = ScreenEnum.LOBBY;
+    this.transition = 0;
     this.players = [];
     this.colors = ['skyblue', 'lime', 'orange', 'pink'];
 }
@@ -38,8 +39,9 @@ State.prototype.removeUser = function(userid) {
         }
     }
     // If we have less than 2 people, end the game
-    if (this.players.length < 2) {
+    if (this.players.length < 2 && state.screen != ScreenEnum.LOBBY) {
         state.screen = ScreenEnum.LOBBY;
+        state.transition = 0;
     }
 };
 

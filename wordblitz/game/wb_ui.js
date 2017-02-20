@@ -1,15 +1,13 @@
 // Root canvas element and stage
 var canvas = null;
 var stage = null;
-
-// Cached state
 var state = null;
 
-// Game assets
-var chalkboardBackground = null;
-
 // Load game assets
-function loadGame(callback) {
+function loadGame(stateObj, callback) {
+    // Set initial state object reference
+    state = stateObj;
+
     // Set initial canvas dimensions
     canvas = document.getElementById('wbCanvas');
     canvas.width = window.innerWidth;
@@ -47,7 +45,9 @@ function loadGame(callback) {
     queue.on('progress', handleProgress);
     queue.on('complete', handleComplete);
     queue.loadManifest([
-        { id: 'chalkboardBackground', src: '/img/ChalkboardBackground.png' }
+        { id: 'chalk-1to2-letters', src: '/sound/chalk-1to2-letters.mp3' },
+        { id: 'chalk-3to4-letters', src: '/sound/chalk-3to4-letters.mp3' },
+        { id: 'chalk-5to6-letters', src: '/sound/chalk-5to6-letters.mp3' }
     ]);
 
     function handleProgress() {
@@ -58,11 +58,7 @@ function loadGame(callback) {
     }
 
     function handleComplete() {
-        // Get image handles and create bitmaps
-        chalkboardBackground = queue.getResult('chalkboardBackground');
-
         // Set resize listener
-        state = new State('????');
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
@@ -73,7 +69,53 @@ function loadGame(callback) {
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        draw();
+        update();
+    }
+}
+
+function playChalkSound(numLetters) {
+    switch (numLetters) {
+    case 1:
+    case 2:
+        createjs.Sound.play('chalk-1to2-letters');
+        break;
+    case 3:
+    case 4:
+        createjs.Sound.play('chalk-3to4-letters');
+        break;
+    default:
+        createjs.Sound.play('chalk-5to6-letters');
+        break;
+    }
+}
+
+function drawTitle() {
+    var title = 'WORD BLITZ';
+    var text = new createjs.Text(title, '80px Eraser', '#ffffff');
+    text.x = canvas.width/2 - text.getBounds().width/2;
+    text.y = 0;
+
+    if (state.transition == 0) {
+        state.transition = 1;
+        playChalkSound(4);
+        createjs.Ticker.setInterval(350);
+        createjs.Ticker.addEventListener('tick', drawTitleLetter);
+        createjs.Ticker.dispatchEvent('tick');
+
+        function drawTitleLetter(event) {
+            if (state.transition == 6) {
+                playChalkSound(5);
+            }
+            text.text = title.substr(0, state.transition);
+            stage.addChild(text);
+            stage.update();
+            state.transition += 1;
+            if (state.transition > title.length) {
+                event.remove();
+            }
+        }
+    } else if (state.transition > title.length) {
+        stage.addChild(text);
     }
 }
 
@@ -83,7 +125,7 @@ function drawPlayerNames() {
 
         var text = new createjs.Text();
         text.set({
-            text: player.dirty ? player.username.substr(0, 1) : player.username,
+            text: player.username,
             font: '50px Eraser',
             x: 30,
             y: 100 + 100*i
@@ -106,6 +148,9 @@ function drawPlayerNames() {
         stage.addChild(text);
 
         if (player.dirty) {
+            player.dirty = false;
+            playChalkSound(player.username.length);
+            text.text = player.username.substr(0, 1);
             var numChars = 1;
             createjs.Ticker.setFPS(3);
             createjs.Ticker.addEventListener('tick', function(event) {
@@ -114,7 +159,6 @@ function drawPlayerNames() {
                 numChars += 1;
                 if (numChars > player.username.length) {
                     event.remove();
-                    player.dirty = false;
                 }
             });
         }
@@ -122,16 +166,17 @@ function drawPlayerNames() {
 }
 
 function drawLobbyPage() {
+    drawTitle();
     drawPlayerNames();
+    //drawInfoBox();
 }
 
-function draw() {
+function update() {
     stage.removeAllChildren();
-    drawLobbyPage();
+    switch (state.screen) {
+        case ScreenEnum.LOBBY:
+            drawLobbyPage();
+            break;
+    }
     stage.update();
-}
-
-function update(newState) {
-    state = newState;
-    draw();
 }
