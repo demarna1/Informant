@@ -1,5 +1,6 @@
 ScreenEnum = {
-    LOBBY: 0
+    LOBBY: 0,
+    ROUND: 1
 }
 
 function State() {
@@ -51,4 +52,8 @@ State.prototype.getUser = function(userid) {
             return this.players[i];
         }
     }
+};
+
+State.prototype.startGame = function() {
+    state.screen = ScreenEnum.ROUND;
 };

@@ -11,14 +11,14 @@ $(function() {
     socket.on('code created', function(data) {
         console.log('new game code = ' + data.gameCode);
         state.gameCode = data.gameCode;
-        update(state);
+        update();
         //playLobbyMusic(true);
     });
 
     socket.on('user joined', function(data) {
         if (state.players.length < 4) {
             state.addUser(data.userid, data.username);
-            update(state);
+            update();
             socket.emit('update players', {
                 players: state.players
             });
@@ -31,11 +31,17 @@ $(function() {
 
     socket.on('user left', function(data) {
         state.removeUser(data.userid);
-        update(state);
+        update();
         if (state.players.length > 0) {
             socket.emit('update players', {
                 players: state.players
             });
         }
+    });
+
+    socket.on('start game', function(data) {
+        //playLobbyMusic(false);
+        state.startGame();
+        update();
     });
 });
