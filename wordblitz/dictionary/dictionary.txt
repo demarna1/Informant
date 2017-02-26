@@ -878,8 +878,6 @@ bison
 bisque
 bistro
 bit
-bitch
-bitchy
 bite
 biter
 biting
@@ -1005,7 +1003,6 @@ bonbon
 bond
 bonds
 bone
-boner
 bong
 bongo
 bongos
@@ -1586,7 +1583,6 @@ chimp
 chin
 china
 chine
-chink
 chino
 chinos
 chintz
@@ -1760,7 +1756,6 @@ coca
 cocci
 coccus
 coccyx
-cock
 cockle
 cocky
 coco
@@ -1860,7 +1855,6 @@ cool
 cooler
 coolie
 coolly
-coon
 coop
 cooper
 coot
@@ -2071,11 +2065,9 @@ cuff
 cuffs
 cull
 cult
-cum
 cumber
 cumin
 cumuli
-cunt
 cup
 cupful
 cupid
@@ -2380,10 +2372,6 @@ dibble
 dibs
 dice
 dicey
-dick
-dicker
-dickey
-dicky
 dicta
 dictum
 did
@@ -2556,7 +2544,6 @@ dotty
 double
 doubly
 doubt
-douche
 dough
 doughy
 dour
@@ -2720,7 +2707,6 @@ dybbuk
 dye
 dyer
 dying
-dyke
 dynamo
 each
 eager
@@ -3038,7 +3024,6 @@ fad
 fade
 faerie
 fag
-faggot
 fagot
 fail
 faille
@@ -3498,8 +3483,6 @@ frump
 frumpy
 fry
 fryer
-fuck
-fucker
 fuddle
 fudge
 fuel
@@ -3817,7 +3800,6 @@ goody
 gooey
 goof
 goofy
-gook
 goon
 goop
 goose
@@ -3895,7 +3877,6 @@ grimly
 grimy
 grin
 grind
-gringo
 grip
 gripe
 griper
@@ -4287,7 +4268,6 @@ homer
 homey
 homily
 hominy
-homo
 hon
 honcho
 hone
@@ -6007,7 +5987,6 @@ nickel
 nicker
 niece
 nifty
-nigger
 niggle
 nigh
 night
@@ -6899,7 +6878,6 @@ prewar
 prey
 price
 pricey
-prick
 pride
 prier
 priest
@@ -7033,7 +7011,6 @@ pusher
 pushup
 pushy
 puss
-pussy
 put
 putout
 putrid
@@ -7432,7 +7409,6 @@ resume
 retail
 retain
 retake
-retard
 retch
 retell
 retest
@@ -8094,8 +8070,6 @@ shire
 shirk
 shirr
 shirt
-shit
-shitty
 shiv
 shiver
 shoal
@@ -8239,7 +8213,6 @@ sizzle
 ska
 skate
 skater
-skeet
 skein
 sketch
 skew
@@ -8352,8 +8325,6 @@ slurp
 slurry
 slush
 slushy
-slut
-slutty
 sly
 slyly
 smack
@@ -9316,7 +9287,6 @@ tire
 tired
 tiring
 tissue
-tit
 titan
 tithe
 tither
@@ -9809,7 +9779,6 @@ vacate
 vacua
 vacuum
 vagary
-vagina
 vague
 vain
 vainly
@@ -10204,7 +10173,6 @@ whom
 whoop
 whoops
 whoosh
-whore
 whorl
 whose
 whoso

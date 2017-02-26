@@ -193,7 +193,7 @@ function drawLobbyPage() {
 
 function drawRoundWord() {
     var text = new createjs.Text(state.roundWord, '60px Eraser', '#ffffff');
-    var textScale = (canvas.width*0.30)/text.getBounds().width;
+    var textScale = (canvas.width*0.25)/text.getBounds().width;
     text.scaleX = text.scaleY = textScale;
     text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
     text.y = canvas.height*0.06;
@@ -219,8 +219,28 @@ function drawRoundWord() {
     }
 }
 
+function drawRoundMatches() {
+    var sampleText = new createjs.Text('------', '36px Eraser');
+    var numColumns = Math.floor((state.roundMatches.length-1)/6)+1;
+    var columnWidth = (canvas.width - 200)/6;
+    var margin = 100 + (columnWidth/2)*(6-numColumns) +
+        (columnWidth - sampleText.getBounds().width)/2;
+    for (var i = 0; i < state.roundMatches.length; i++) {
+        var match = state.roundMatches[i];
+        var word = match.word;
+        if (!match.solved) {
+            word = word.replace(/[A-Z]/g, '-');
+        }
+        var text = new createjs.Text(word, '36px Eraser', match.color);
+        text.x = margin + columnWidth*Math.floor(i/6);
+        text.y = canvas.height*0.23 + canvas.height*0.07*(i%6);
+        stage.addChild(text);
+    }
+}
+
 function drawRoundPage() {
     drawRoundWord();
+    drawRoundMatches();
 }
 
 function update() {

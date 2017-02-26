@@ -67,5 +67,12 @@ State.prototype.startGame = function(word, matches) {
         this.players[i].roundScore = 0;
     }
     this.roundWord = word;
-    this.roundMatches = matches;
+    this.roundMatches = [];
+    for (var i = 0; i < matches.length; i++) {
+        this.roundMatches.push({
+            word : matches[i],
+            solved: false,
+            color: '#ffffff'
+        });
+    }
 };

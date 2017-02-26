@@ -48,5 +48,8 @@ exports.getMatches = function(word) {
             matches.push(candidate);
         }
     }
+    matches.sort(function(a, b) {
+        return a.length - b.length || a.localeCompare(b);
+    });
     return matches;
 };
