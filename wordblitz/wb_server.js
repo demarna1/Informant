@@ -1,3 +1,5 @@
+var dictionary = require('./dictionary/dictionary.js');
+
 // Word Blitz game server
 exports.rooms = {};
 
@@ -80,7 +82,11 @@ exports.addListener = function(io) {
 
         // The players have started the game
         socket.on('start game', function() {
-            socket.broadcast.to(socket.gameid).emit('start game');
+            var word = dictionary.getWord();
+            socket.broadcast.to(socket.gameid).emit('start game', {
+                word: word,
+                matches: dictionary.getMatches(word)
+            });
         });
     });
 };

@@ -54,6 +54,6 @@ State.prototype.getUser = function(userid) {
     }
 };
 
-State.prototype.startGame = function() {
+State.prototype.startGame = function(word, matches) {
     state.screen = ScreenEnum.ROUND;
 };

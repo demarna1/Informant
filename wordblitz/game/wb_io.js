@@ -41,7 +41,14 @@ $(function() {
 
     socket.on('start game', function(data) {
         //playLobbyMusic(false);
-        state.startGame();
-        update();
+        console.log('new game with word = ' + data.word);
+        console.log('matches = ' + data.matches);
+        //animateLobbyPage(function() {
+            state.startGame(data.word, data.matches);
+            update();
+            //socket.emit('new round', {
+                //letters: state.letters
+            //});
+        //});
     });
 });
