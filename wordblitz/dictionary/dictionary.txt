@@ -1388,7 +1388,6 @@ canon
 canopy
 canst
 cant
-canter
 canto
 canton
 cantor
@@ -1428,7 +1427,6 @@ carp
 carpal
 carpel
 carper
-carpet
 carpi
 carpus
 carrel
@@ -1452,7 +1450,6 @@ casket
 cassia
 cast
 caste
-caster
 castle
 castor
 casual
@@ -2316,7 +2313,6 @@ dental
 dentin
 denude
 deny
-depart
 depend
 depict
 deploy
@@ -2880,7 +2876,6 @@ entice
 entire
 entity
 entomb
-entrap
 entree
 entry
 envoy
@@ -5466,7 +5461,6 @@ masses
 massif
 mast
 masted
-master
 mastic
 mat
 match
@@ -5937,7 +5931,6 @@ neatly
 nebula
 neck
 necked
-nectar
 nee
 need
 needle
@@ -6385,7 +6378,6 @@ parcel
 parch
 pardon
 pare
-parent
 parer
 pariah
 paring
@@ -6401,10 +6393,8 @@ parole
 parrot
 parry
 parse
-parsec
 parson
 part
-parted
 partly
 party
 pascal
@@ -6417,7 +6407,6 @@ passim
 past
 pasta
 paste
-pastel
 pastor
 pastry
 pasty
@@ -6538,7 +6527,6 @@ pestle
 pesto
 pet
 petal
-petard
 peter
 petite
 petrel
@@ -6651,7 +6639,6 @@ pipit
 pippin
 pique
 piracy
-pirate
 pirogi
 pis
 piss
@@ -6686,7 +6673,6 @@ plait
 plan
 plane
 planer
-planet
 plank
 plant
 plaque
@@ -6695,7 +6681,6 @@ plasma
 plat
 plate
 plated
-platen
 platy
 platys
 play
@@ -7245,9 +7230,7 @@ rebus
 rebut
 rec
 recall
-recant
 recap
-recast
 recede
 recent
 recess
@@ -7369,7 +7352,6 @@ rep
 repack
 repaid
 repair
-repast
 repave
 repay
 repeal
@@ -7847,7 +7829,6 @@ scow
 scowl
 scram
 scrap
-scrape
 scraps
 scrawl
 scream
@@ -8499,7 +8480,6 @@ soy
 spa
 space
 spaced
-spacer
 spacey
 spacy
 spade
@@ -8666,7 +8646,6 @@ stands
 stank
 stanza
 staph
-staple
 star
 starch
 stare
@@ -8770,7 +8749,6 @@ strati
 straw
 stray
 streak
-stream
 street
 strep
 stress
@@ -9009,7 +8987,6 @@ tame
 tamely
 tamer
 tamp
-tamper
 tampon
 tan
 tandem
@@ -9407,7 +9384,6 @@ train
 trait
 tram
 tramp
-trance
 trap
 traps
 trash

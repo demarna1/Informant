@@ -220,11 +220,22 @@ function drawRoundWord() {
 }
 
 function drawRoundMatches() {
-    var sampleText = new createjs.Text('------', '36px Eraser');
+    // Determine number of rows/columns
     var numColumns = Math.floor((state.roundMatches.length-1)/6)+1;
+    var numRows = 6;
+    if (numColumns > 6) {
+        numRows = numColumns;
+        numColumns = 6;
+    }
+
+    // Calculate column width, row height, and left margin
+    var sampleText = new createjs.Text('------', '36px Eraser');
     var columnWidth = (canvas.width - 200)/6;
-    var margin = 100 + (columnWidth/2)*(6-numColumns) +
+    var rowHeight = canvas.height*(0.07 - 0.0075*(numRows - 6));
+    var marginLeft = 100 + (columnWidth/2)*(6-numColumns) +
         (columnWidth - sampleText.getBounds().width)/2;
+
+    // Draw all solved words or unsolved dashes
     for (var i = 0; i < state.roundMatches.length; i++) {
         var match = state.roundMatches[i];
         var word = match.word;
@@ -232,8 +243,8 @@ function drawRoundMatches() {
             word = word.replace(/[A-Z]/g, '-');
         }
         var text = new createjs.Text(word, '36px Eraser', match.color);
-        text.x = margin + columnWidth*Math.floor(i/6);
-        text.y = canvas.height*0.23 + canvas.height*0.07*(i%6);
+        text.x = marginLeft + columnWidth*Math.floor(i/numRows);
+        text.y = canvas.height*0.23 + rowHeight*(i%numRows);
         stage.addChild(text);
     }
 }
