@@ -2773,6 +2773,7 @@ editor
 educe
 eek
 eel
+eels
 eerie
 eerily
 eery

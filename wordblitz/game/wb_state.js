@@ -3,12 +3,15 @@ ScreenEnum = {
     ROUND: 1
 }
 
+
 function State() {
     this.gameCode = '????';
     this.screen = ScreenEnum.LOBBY;
     this.transition = 0;
     this.players = [];
     this.colors = ['skyblue', 'lime', 'orange', 'pink'];
+    this.roundWord = 'abcdef';
+    this.roundMatches = [];
 }
 
 State.prototype.addUser = function(userid, username) {
@@ -18,7 +21,9 @@ State.prototype.addUser = function(userid, username) {
         username: username,
         gameMaster: false,
         dirty: true,
-        color: this.colors.splice(rindex, 1)[0]
+        color: this.colors.splice(rindex, 1)[0],
+        score: 0,
+        roundScore: 0
     });
     if (this.players.length == 1) {
         this.players[0].gameMaster = true;
@@ -56,4 +61,11 @@ State.prototype.getUser = function(userid) {
 
 State.prototype.startGame = function(word, matches) {
     state.screen = ScreenEnum.ROUND;
+    state.transition = 0;
+    for (var i = 0; i < this.players.length; i++) {
+        this.players[i].score = 0;
+        this.players[i].roundScore = 0;
+    }
+    this.roundWord = word;
+    this.roundMatches = matches;
 };

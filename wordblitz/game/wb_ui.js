@@ -191,8 +191,36 @@ function drawLobbyPage() {
     drawPlayerNames();
 }
 
+function drawRoundWord() {
+    var text = new createjs.Text(state.roundWord, '60px Eraser', '#ffffff');
+    var textScale = (canvas.width*0.30)/text.getBounds().width;
+    text.scaleX = text.scaleY = textScale;
+    text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
+    text.y = canvas.height*0.06;
+
+    if (state.transition == 0) {
+        state.transition = 1;
+        playChalkSound(6);
+        createjs.Ticker.setInterval(350);
+        createjs.Ticker.addEventListener('tick', drawRoundWordLetter);
+        createjs.Ticker.dispatchEvent('tick');
+
+        function drawRoundWordLetter(event) {
+            text.text = state.roundWord.substr(0, state.transition);
+            stage.addChild(text);
+            stage.update();
+            state.transition += 1;
+            if (state.transition > 6) {
+                event.remove();
+            }
+        }
+    } else if (state.transition > 6) {
+        stage.addChild(text);
+    }
+}
+
 function drawRoundPage() {
-    // TODO
+    drawRoundWord();
 }
 
 function update() {
