@@ -12,7 +12,6 @@ $(function() {
         console.log('new game code = ' + data.gameCode);
         state.gameCode = data.gameCode;
         update();
-        //playLobbyMusic(true);
     });
 
     socket.on('user joined', function(data) {
@@ -40,15 +39,13 @@ $(function() {
     });
 
     socket.on('start game', function(data) {
-        //playLobbyMusic(false);
-        console.log('new game with word = ' + data.word);
-        console.log('matches = ' + data.matches);
-        //animateLobbyPage(function() {
+        animateRoundPage(function() {
             state.startGame(data.word, data.matches);
             update();
-            //socket.emit('new round', {
-                //letters: state.letters
-            //});
-        //});
+            socket.emit('start round', {
+                word: data.word,
+                matches: data.matches
+            });
+        });
     });
 });

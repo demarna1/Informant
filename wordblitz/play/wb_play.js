@@ -30,6 +30,7 @@ $(function() {
 
     $masterButton.click(function() {
         socket.emit('start game');
+        $masterContainer.hide();
     });
 
     socket.on('connect', function() {
@@ -66,5 +67,13 @@ $(function() {
                 $masterButton.prop('disabled', data.players.length < 2);
             }
         }
+    });
+
+    socket.on('round countdown', function() {
+        console.log('got round countdown');
+    });
+
+    socket.on('start round', function(data) {
+        console.log('starting round with word ' + data.word);
     });
 });

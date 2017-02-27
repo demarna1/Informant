@@ -87,6 +87,12 @@ exports.addListener = function(io) {
                 word: word,
                 matches: dictionary.getMatches(word)
             });
+            socket.broadcast.to(socket.gameCode).emit('round countdown');
+        });
+
+        // The host is starting the round
+        socket.on('start round', function(data) {
+            socket.broadcast.to(socket.gameCode).emit('start round', data);
         });
     });
 };

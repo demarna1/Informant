@@ -191,6 +191,28 @@ function drawLobbyPage() {
     drawPlayerNames();
 }
 
+function animateRoundPage(callback) {
+    stage.removeAllChildren();
+    var time = 5;
+    createjs.Ticker.setFPS(1);
+    createjs.Ticker.removeAllEventListeners();
+    createjs.Ticker.addEventListener('tick', drawRoundCountdown);
+
+    function drawRoundCountdown(event) {
+        stage.removeAllChildren();
+        var text = new createjs.Text(time, '80px Eraser', '#ffffff');
+        text.x = canvas.width/2 - text.getBounds().width/2;
+        text.y = canvas.height/2 - text.getBounds().height/2;
+        stage.addChild(text);
+        stage.update();
+        time -= 1;
+        if (time < 0) {
+            createjs.Ticker.removeAllEventListeners();
+            callback();
+        }
+    }
+}
+
 function drawRoundWord() {
     var text = new createjs.Text(state.roundWord, '60px Eraser', '#ffffff');
     var textScale = (canvas.width*0.25)/text.getBounds().width;
