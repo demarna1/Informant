@@ -39,8 +39,9 @@ $(function() {
     });
 
     socket.on('start game', function(data) {
-        console.log('starting game with word: ' + data.word);
+        console.log('starting game');
         animateRoundPage(function() {
+            console.log('round word: ' + data.word);
             state.startGame(data.word, data.matches);
             update();
             socket.emit('start round', {

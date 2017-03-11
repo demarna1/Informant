@@ -10,21 +10,26 @@
   <script src="/wb_play.js"></script>
 </head>
 <body>
-  <ul class="pages">
+  <ul class="pages wb-text-style">
     <li class="waitPage">
-      <div class="welcome header wb-text-style">Welcome</div>
+      <div class="welcome header">Welcome</div>
       <div class="container text-center master-container
           col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="wb-text-style">Everybody in?</div>
+        <div>Everybody in?</div>
         <div>
-          <input class="btn btn-default btn-block master-button wb-text-style"
+          <input class="btn btn-default btn-block master-button"
             type="button" id="startButton" value="Start Game"/>
         </div>
       </div>
     </li>
-    <li class="countdownPage">
-      <div class="ready header wb-text-style">Get Ready!</div>
-      <div class="countdown wb-text-style">5</div>
+    <li class="readyPage">
+      <div class="ready header">Get Ready!</div>
+      <div class="countdown">5</div>
+    </li>
+    <li class="solvePage">
+      <div class="header">Score: 0
+        <div style="float: right">60</div>
+      </div>
     </li>
   </ul>
 </body>

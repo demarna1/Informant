@@ -1,7 +1,8 @@
 $(function() {
     // Pages
     var $waitPage = $('.waitPage');
-    var $countdownPage = $('.countdownPage');
+    var $readyPage = $('.readyPage');
+    var $solvePage = $('.solvePage');
     var $currentPage = $waitPage;
 
     // Other jQuery elements
@@ -10,6 +11,7 @@ $(function() {
     var $welcomeHeader = $('.welcome.header');
     var $masterContainer = $('.master-container');
     var $masterButton = $('.master-button');
+    var $countdown = $('.countdown');
 
     // State variables
     var socket = io('/wordblitz');
@@ -42,10 +44,30 @@ $(function() {
         }
     }
 
+    function roundCountdown() {
+        transitionTo($readyPage);
+        if (typeof roundCountdown.currentId == 'undefined') {
+            roundCountdown.currentId = 0;
+        }
+        if (roundCountdown.currentId > 0) {
+            clearInterval(roundCountdown.currentId);
+            roundCountdown.currentId = 0;
+        }
+        var timeLeft = 5;
+        $countdown.text(timeLeft);
+        roundCountdown.currentId = setInterval(function() {
+            if (--timeLeft <= 0) {
+                clearInterval(roundCountdown.currentId);
+                roundCountdown.currentId = 0;
+            }
+            $countdown.text(timeLeft);
+        }, 1000);
+    }
+
     $masterButton.click(function() {
         socket.emit('start game');
-        transitionTo($countdownPage);
         $masterContainer.hide();
+        roundCountdown();
     });
 
     socket.on('connect', function() {
@@ -88,10 +110,11 @@ $(function() {
     });
 
     socket.on('round countdown', function() {
-        transitionTo($countdownPage);
+        roundCountdown();
     });
 
     socket.on('start round', function(data) {
-        console.log('starting round with word ' + data.word);
+        console.log('round word: ' + data.word);
+        transitionTo($solvePage);
     });
 });
