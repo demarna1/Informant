@@ -194,17 +194,33 @@ function drawLobbyPage() {
 
 function animateRoundPage(callback) {
     stage.removeAllChildren();
+    state.screen = ScreenEnum.ROUND_TRANSITION;
+
+    var title = new createjs.Text('Get Ready!', '60px Eraser', '#ffffff');
+    var titleScale = (canvas.width*0.42)/title.getBounds().width;
+    title.scaleX = title.scaleY = titleScale;
+    title.x = canvas.width/2 - (title.getBounds().width*titleScale)/2;
+    title.y = canvas.height*0.08;
+
     var time = 5;
     createjs.Ticker.setFPS(1);
     createjs.Ticker.removeAllEventListeners();
     createjs.Ticker.addEventListener('tick', drawRoundCountdown);
 
     function drawRoundCountdown(event) {
+        // Stop the countdown if the state changed
+        if (state.screen !== ScreenEnum.ROUND_TRANSITION) {
+            event.remove();
+            return;
+        }
+
+        // Update the countdown
         stage.removeAllChildren();
         var text = new createjs.Text(time, '80px Eraser', '#ffffff');
         text.x = canvas.width/2 - text.getBounds().width/2;
         text.y = canvas.height/2 - text.getBounds().height/2;
         stage.addChild(text);
+        stage.addChild(title);
         stage.update();
         time -= 1;
         if (time < 0) {

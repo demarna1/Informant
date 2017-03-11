@@ -1,7 +1,13 @@
 $(function() {
+    // Pages
+    var $waitPage = $('.waitPage');
+    var $countdownPage = $('.countdownPage');
+    var $currentPage = $waitPage;
+
     // Other jQuery elements
-    var $header = $('.header');
     var $body = $('body');
+    var $header = $('.header');
+    var $welcomeHeader = $('.welcome.header');
     var $masterContainer = $('.master-container');
     var $masterButton = $('.master-button');
 
@@ -28,8 +34,17 @@ $(function() {
         }
     };
 
+    function transitionTo($nextPage) {
+        if ($currentPage !== $nextPage) {
+            $currentPage.fadeOut();
+            $nextPage.delay(400).fadeIn();
+            $currentPage = $nextPage;
+        }
+    }
+
     $masterButton.click(function() {
         socket.emit('start game');
+        transitionTo($countdownPage);
         $masterContainer.hide();
     });
 
@@ -39,7 +54,7 @@ $(function() {
             gameCode: getUrlParameter('gameCode'),
             username: username
         });
-        $header.text('Welcome, ' + username + '!');
+        $welcomeHeader.text('Welcome, ' + username + '!');
     });
 
     socket.on('host left', function(data) {
@@ -53,6 +68,9 @@ $(function() {
     });
 
     socket.on('update players', function(data) {
+        if (data.players.length < 2) {
+            transitionTo($waitPage);
+        }
         for (var i = 0; i < data.players.length; i++) {
             var player = data.players[i];
             if (player.userid.indexOf(socket.id) !== -1) {
@@ -70,7 +88,7 @@ $(function() {
     });
 
     socket.on('round countdown', function() {
-        console.log('got round countdown');
+        transitionTo($countdownPage);
     });
 
     socket.on('start round', function(data) {

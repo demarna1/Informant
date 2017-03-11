@@ -1,6 +1,7 @@
 ScreenEnum = {
     LOBBY: 0,
-    ROUND: 1
+    ROUND_TRANSITION: 1,
+    ROUND: 2
 }
 
 

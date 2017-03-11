@@ -38,3 +38,13 @@ ul {
     font-size: large;
     padding: 10px;
 }
+
+.countdownPage {
+    display: none;
+}
+
+.countdown {
+    text-align: center;
+    font-size: x-large;
+    margin: 40px;
+}
