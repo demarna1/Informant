@@ -115,6 +115,9 @@ $(function() {
 
     socket.on('start round', function(data) {
         console.log('round word: ' + data.word);
+        for (var i = 0; i < data.word.length; i++) {
+            $('#tile' + i).text(data.word[i]);
+        }
         transitionTo($solvePage);
     });
 });

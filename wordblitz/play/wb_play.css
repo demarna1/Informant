@@ -48,3 +48,11 @@ ul {
     font-size: x-large;
     margin: 40px;
 }
+
+.tiles-home {
+    margin-top: 20px;
+}
+
+.tile {
+    width: 15%;
+}
