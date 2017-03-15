@@ -49,8 +49,12 @@ ul {
     margin: 40px;
 }
 
-.tiles-home {
-    margin-top: 20px;
+.wb-row {
+    margin-top: 25px;
+}
+
+.action {
+    width: 22.5%;
 }
 
 .tile {

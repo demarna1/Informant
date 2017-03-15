@@ -12,6 +12,7 @@ $(function() {
     var $masterContainer = $('.master-container');
     var $masterButton = $('.master-button');
     var $countdown = $('.countdown');
+    var $stage = $('.stage');
 
     // State variables
     var socket = io('/wordblitz');
@@ -68,6 +69,11 @@ $(function() {
         socket.emit('start game');
         $masterContainer.hide();
         roundCountdown();
+    });
+
+    $('.tile').click(function() {
+        $(this).hide();
+        $stage.text($stage.text() + $(this).text());
     });
 
     socket.on('connect', function() {
