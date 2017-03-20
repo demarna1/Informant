@@ -52,12 +52,11 @@ $(function() {
     });
 
     socket.on('word attempt', function(data) {
-        if (state.submitWord(data.word, data.userid)) {
-            console.log(state.getUser(data.userid).username + ' got ' + data.word);
-            update();
-            // return 'word success'
-        } else {
-            // return 'word failed'
-        }
+        var score = state.submitWord(data.word, data.userid);
+        socket.emit('word score', {
+            score: score,
+            userid: data.userid
+        });
+        update();
     });
 });

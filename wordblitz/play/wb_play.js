@@ -13,9 +13,11 @@ $(function() {
     var $masterButton = $('.master-button');
     var $countdown = $('.countdown');
     var $stage = $('.stage');
+    var $score = $('.score');
 
     // State variables
     var socket = io('/wordblitz');
+    var score = 0;
     var matchList = null;
     var username = '';
 
@@ -85,14 +87,19 @@ $(function() {
     $('.action.submit').click(function() {
         var word = $stage.text();
         if (matchList.indexOf(word) > -1) {
-            $('.tile').css('visibility', 'visible');
-            $stage.css('visibility', 'hidden');
-            $stage.text('0');
-            console.log('player submitting ' + word);
+            $('.btn').prop('disabled', true);
             socket.emit('word attempt', {
                 word: word
             });
         }
+    });
+
+    $('.action.back').click(function() {
+        // TODO
+    });
+
+    $('action.mix').click(function() {
+        // TODO
     });
 
     $('.action.cancel').click(function() {
@@ -151,5 +158,16 @@ $(function() {
             $('#tile' + i).text(data.word[i]);
         }
         transitionTo($solvePage);
+    });
+
+    socket.on('word score', function(data) {
+        $('.btn').prop('disabled', false);
+        if (data.score > 0) {
+            score += data.score;
+            $score.text('Score: ' + score);
+            $('.tile').css('visibility', 'visible');
+            $stage.css('visibility', 'hidden');
+            $stage.text('0');
+        }
     });
 });

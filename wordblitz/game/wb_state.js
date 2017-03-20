@@ -78,14 +78,23 @@ State.prototype.startGame = function(word, matches) {
     }
 };
 
+State.prototype.getWordScore = function(word) {
+    switch (word.length) {
+    case 3: return 200;
+    case 4: return 300;
+    case 5: return 500;
+    case 6: return 1000;
+    }
+}
+
 State.prototype.submitWord = function(word, userid) {
     for (var i = 0; i < this.roundMatches.length; i++) {
         var match = this.roundMatches[i];
         if (match.word === word && !match.solved) {
             match.solved = true;
             match.color = this.getUser(userid).color;
-            return true;
+            return this.getWordScore(match.word);
         }
     }
-    return false;
+    return 0;
 };

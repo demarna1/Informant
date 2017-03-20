@@ -102,5 +102,12 @@ exports.addListener = function(io) {
                 userid: socket.id
             });
         });
+
+        // The host has accepted/rejected the word
+        socket.on('word score', function(data) {
+            socket.broadcast.to(data.userid).emit('word score', {
+                score: data.score
+            });
+        });
     });
 };

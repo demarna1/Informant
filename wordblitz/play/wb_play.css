@@ -54,6 +54,7 @@ ul {
 }
 
 .stage {
+    font-size: x-large;
     visibility: hidden;
 }
 
