@@ -50,4 +50,14 @@ $(function() {
             });
         });
     });
+
+    socket.on('word attempt', function(data) {
+        if (state.submitWord(data.word, data.userid)) {
+            console.log(state.getUser(data.userid).username + ' got ' + data.word);
+            update();
+            // return 'word success'
+        } else {
+            // return 'word failed'
+        }
+    });
 });

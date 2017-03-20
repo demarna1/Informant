@@ -94,5 +94,13 @@ exports.addListener = function(io) {
         socket.on('start round', function(data) {
             socket.broadcast.to(socket.gameCode).emit('start round', data);
         });
+
+        // The player has submitted a word
+        socket.on('word attempt', function(data) {
+            socket.broadcast.to(socket.gameid).emit('word attempt', {
+                word: data.word,
+                userid: socket.id
+            });
+        });
     });
 };

@@ -16,6 +16,7 @@ $(function() {
 
     // State variables
     var socket = io('/wordblitz');
+    var matchList = null;
     var username = '';
 
     // Colors
@@ -72,8 +73,32 @@ $(function() {
     });
 
     $('.tile').click(function() {
-        $(this).hide();
-        $stage.text($stage.text() + $(this).text());
+        $(this).css('visibility', 'hidden');
+        if ($stage.text() === '0') {
+            $stage.css('visibility', 'visible');
+            $stage.text($(this).text());
+        } else {
+            $stage.text($stage.text() + $(this).text());
+        }
+    });
+
+    $('.action.submit').click(function() {
+        var word = $stage.text();
+        if (matchList.indexOf(word) > -1) {
+            $('.tile').css('visibility', 'visible');
+            $stage.css('visibility', 'hidden');
+            $stage.text('0');
+            console.log('player submitting ' + word);
+            socket.emit('word attempt', {
+                word: word
+            });
+        }
+    });
+
+    $('.action.cancel').click(function() {
+        $('.tile').css('visibility', 'visible');
+        $stage.css('visibility', 'hidden');
+        $stage.text('0');
     });
 
     socket.on('connect', function() {
@@ -121,6 +146,7 @@ $(function() {
 
     socket.on('start round', function(data) {
         console.log('round word: ' + data.word);
+        matchList = data.matches;
         for (var i = 0; i < data.word.length; i++) {
             $('#tile' + i).text(data.word[i]);
         }

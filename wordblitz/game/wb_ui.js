@@ -73,6 +73,18 @@ function loadGame(stateObj, callback) {
     }
 }
 
+function getChalkColor(color) {
+    switch (color) {
+    case 'white':   return '#ffffff';
+    case 'yellow':  return '#ffffcc';
+    case 'skyblue': return '#bbddff';
+    case 'lime':    return '#ccffbb';
+    case 'orange':  return '#ffdd88';
+    case 'pink':    return '#ffbbbb';
+    default:        return '#000000';
+    }
+}
+
 function playChalkSound(numLetters) {
     switch (numLetters) {
     case 1:
@@ -91,7 +103,7 @@ function playChalkSound(numLetters) {
 
 function drawTitle() {
     var title = 'WORD BLITZ';
-    var text = new createjs.Text(title, '60px Eraser', '#ffffff');
+    var text = new createjs.Text(title, '60px Eraser', getChalkColor('white'));
     var textScale = (canvas.width*0.42)/text.getBounds().width;
     text.scaleX = text.scaleY = textScale;
     text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
@@ -124,7 +136,7 @@ function drawTitle() {
 
 function drawInfoBox() {
     var label = 'game code:';
-    var labelText = new createjs.Text(label, '42px Eraser', '#ffffff');
+    var labelText = new createjs.Text(label, '42px Eraser', getChalkColor('white'));
     var textScale = (canvas.width*0.22)/labelText.getBounds().width;
     labelText.scaleX = labelText.scaleY = textScale;
     labelText.x = canvas.width/2 - (labelText.getBounds().width*textScale)/2;
@@ -132,7 +144,7 @@ function drawInfoBox() {
     stage.addChild(labelText);
 
     var code = state.gameCode;
-    var codeText = new createjs.Text(code, '60px Eraser', '#ffffcc');
+    var codeText = new createjs.Text(code, '60px Eraser', getChalkColor('yellow'));
     codeText.scaleX = codeText.scaleY = textScale;
     codeText.x = canvas.width/2 - (codeText.getBounds().width*textScale)/2;
     codeText.y = labelText.y + labelText.getBounds().height*textScale;
@@ -151,21 +163,7 @@ function drawPlayerNames() {
         text.x = canvas.width/2 + (canvas.width/6)*(i%2*2-1) -
             (text.getBounds().width*textScale)/2;
         text.y = canvas.height*0.60 + canvas.height*0.15*Math.floor(i/2);
-        switch (player.color) {
-        case 'skyblue':
-            text.color = '#bbddff';
-            break;
-        case 'lime':
-            text.color = '#ccffbb';
-            break;
-        case 'orange':
-            text.color = '#ffdd88';
-            break;
-        case 'pink':
-            text.color = '#ffbbbb';
-            break;
-        }
-
+        text.color = getChalkColor(player.color);
         stage.addChild(text);
 
         if (player.dirty) {
@@ -196,7 +194,7 @@ function animateRoundPage(callback) {
     stage.removeAllChildren();
     state.screen = ScreenEnum.ROUND_TRANSITION;
 
-    var title = new createjs.Text('Get Ready!', '60px Eraser', '#ffffff');
+    var title = new createjs.Text('Get Ready!', '60px Eraser', getChalkColor('white'));
     var titleScale = (canvas.width*0.42)/title.getBounds().width;
     title.scaleX = title.scaleY = titleScale;
     title.x = canvas.width/2 - (title.getBounds().width*titleScale)/2;
@@ -216,7 +214,7 @@ function animateRoundPage(callback) {
 
         // Update the countdown
         stage.removeAllChildren();
-        var text = new createjs.Text(time, '80px Eraser', '#ffffff');
+        var text = new createjs.Text(time, '80px Eraser', getChalkColor('white'));
         text.x = canvas.width/2 - text.getBounds().width/2;
         text.y = canvas.height/2 - text.getBounds().height/2;
         stage.addChild(text);
@@ -231,7 +229,7 @@ function animateRoundPage(callback) {
 }
 
 function drawRoundWord() {
-    var text = new createjs.Text(state.roundWord, '60px Eraser', '#ffffff');
+    var text = new createjs.Text(state.roundWord, '60px Eraser', getChalkColor('white'));
     var textScale = (canvas.width*0.22)/text.getBounds().width;
     text.scaleX = text.scaleY = textScale;
     text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
@@ -282,7 +280,7 @@ function drawRoundMatches() {
         if (!match.solved) {
             word = word.replace(/[A-Z]/g, '-');
         }
-        var text = new createjs.Text(word, '36px Eraser', match.color);
+        var text = new createjs.Text(word, '36px Eraser', getChalkColor(match.color));
         text.x = marginLeft + columnWidth*Math.floor(i/numRows);
         text.y = canvas.height*0.23 + rowHeight*(i%numRows);
         stage.addChild(text);

@@ -73,7 +73,19 @@ State.prototype.startGame = function(word, matches) {
         this.roundMatches.push({
             word : matches[i],
             solved: false,
-            color: '#ffffff'
+            color: 'white'
         });
     }
+};
+
+State.prototype.submitWord = function(word, userid) {
+    for (var i = 0; i < this.roundMatches.length; i++) {
+        var match = this.roundMatches[i];
+        if (match.word === word && !match.solved) {
+            match.solved = true;
+            match.color = this.getUser(userid).color;
+            return true;
+        }
+    }
+    return false;
 };
