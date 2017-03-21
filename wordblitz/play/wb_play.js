@@ -1,4 +1,7 @@
 $(function() {
+    // Constants
+    var NUM_TILES = 6;
+
     // Pages
     var $waitPage = $('.waitPage');
     var $readyPage = $('.readyPage');
@@ -74,7 +77,7 @@ $(function() {
         roundCountdown();
     });
 
-    $('.tile').click(function() {
+    $('.tile').on('touchstart click', function() {
         $(this).css('visibility', 'hidden');
         if ($stage.text() === '0') {
             $stage.css('visibility', 'visible');
@@ -95,7 +98,19 @@ $(function() {
     });
 
     $('.action.back').click(function() {
-        // TODO
+        var letter = $stage.text().slice(-1);
+        for (var i = 0; i < NUM_TILES; i++) {
+            if ($('#tile' + i).text() === letter) {
+                $('#tile' + i).css('visibility', 'visible');
+                if ($stage.text().length == 1) {
+                    $stage.css('visibility', 'hidden');
+                    $stage.text('0');
+                } else {
+                    $stage.text($stage.text().slice(0, -1));
+                }
+                break;
+            }
+        }
     });
 
     $('action.mix').click(function() {
@@ -154,7 +169,7 @@ $(function() {
     socket.on('start round', function(data) {
         console.log('round word: ' + data.word);
         matchList = data.matches;
-        for (var i = 0; i < data.word.length; i++) {
+        for (var i = 0; i < NUM_TILES; i++) {
             $('#tile' + i).text(data.word[i]);
         }
         transitionTo($solvePage);
