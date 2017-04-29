@@ -43,22 +43,16 @@ scrabbleReader.on('close', function() {
             // Add past tense
             try {
                 var past = tensify(word).past;
-                if (dictionary.indexOf(past) > -1) {
-                    continue;
-                }
                 if (past !== word && past.length <= 6 &&
-                    scrabbleDict.indexOf(past.toUpperCase()) > -1) {
+                    scrabbleDict.indexOf(past) > -1) {
                     console.log(past);
                 }
             } catch (err) { }
 
             // Add plural
             var plural = pluralize(word);
-            if (dictionary.indexOf(plural) > -1) {
-                continue;
-            }
             if (plural !== word && plural.length <= 6 &&
-                scrabbleDict.indexOf(plural.toUpperCase()) > -1) {
+                scrabbleDict.indexOf(plural) > -1) {
                 console.log(plural);
             }
         }

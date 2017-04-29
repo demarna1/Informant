@@ -1,10 +1,19 @@
 // Read the dictionary into memory
 var dictionary = [];
-var lineReader = require('readline').createInterface({
+var dictReader = require('readline').createInterface({
     input: require('fs').createReadStream(__dirname + '/dictionary.txt')
 });
-lineReader.on('line', function(line) {
+dictReader.on('line', function(line) {
     dictionary.push(line);
+});
+
+// Read list of potential round words into memory
+var round_words = [];
+var wordReader = require('readline').createInterface({
+    input: require('fs').createReadStream(__dirname + '/round_words.txt')
+});
+wordReader.on('line', function(line) {
+    round_words.push(line);
 });
 
 // Shuffle a string
@@ -21,10 +30,7 @@ String.prototype.shuffle = function () {
 
 // Return a random 6-letter word from the dictionary
 exports.getWord = function() {
-    var candidates = dictionary.filter(function(word) {
-        return word.length == 6;
-    });
-    var word = candidates[Math.floor(Math.random()*candidates.length)];
+    var word = round_words[Math.floor(Math.random()*round_words.length)];
     return word.shuffle().toUpperCase();
 };
 
