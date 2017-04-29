@@ -1,7 +1,7 @@
 {
   "name": "informant",
   "version": "0.0.0",
-  "description": "Bomb defuse game using Node.js and socket.io",
+  "description": "Multiplayer games using Node.js and socket.io",
   "author": "Noah DeMarco",
   "dependencies": {
     "express": "^4.13.3",
