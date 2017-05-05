@@ -71,23 +71,41 @@ $(function() {
         }, 1000);
     }
 
-    $masterButton.click(function() {
-        socket.emit('start game');
-        $masterContainer.hide();
-        roundCountdown();
-    });
-
-    $('.tile').on('touchstart click', function() {
-        $(this).css('visibility', 'hidden');
-        if ($stage.text() === '0') {
-            $stage.css('visibility', 'visible');
-            $stage.text($(this).text());
-        } else {
-            $stage.text($stage.text() + $(this).text());
+    function getTileByLetter(letter, isVisible) {
+        for (var i = 0; i < NUM_TILES; i++) {
+            var tile = $('#tile' + i);
+            if (tile.text() === letter) {
+                var visibility = tile.css('visibility').toLowerCase();
+                if ((isVisible && visibility === 'visible') ||
+                    (!isVisible && visibility === 'hidden')) {
+                    return tile;
+                }
+            }
         }
-    });
+        return null;
+    }
 
-    $('.action.submit').click(function() {
+    function moveTile(tile, toStage) {
+        if (toStage) {
+            tile.css('visibility', 'hidden');
+            if ($stage.text() === '0') {
+                $stage.css('visibility', 'visible');
+                $stage.text(tile.text());
+            } else {
+                $stage.text($stage.text() + tile.text());
+            }
+        } else {
+            tile.css('visibility', 'visible');
+            if ($stage.text().length == 1) {
+                $stage.css('visibility', 'hidden');
+                $stage.text('0');
+            } else {
+                $stage.text($stage.text().slice(0, -1));
+            }
+        }
+    }
+
+    function submitWord() {
         var word = $stage.text();
         if (matchList.indexOf(word) > -1) {
             $('.btn').prop('disabled', true);
@@ -95,21 +113,38 @@ $(function() {
                 word: word
             });
         }
+    }
+
+    $masterButton.click(function() {
+        socket.emit('start game');
+        $masterContainer.hide();
+        roundCountdown();
+    });
+
+    // Accept key presses on desktop
+    $(document).keypress(function(event) {
+        var key = event.key.toUpperCase();
+        var tile = getTileByLetter(key, true);
+        if (tile) {
+            moveTile(tile, true);
+        } else if (key === 'ENTER') {
+            submitWord();
+        }
+    });
+
+    $('.tile').on('touchstart click', function() {
+        moveTile($(this), true);
+    });
+
+    $('.action.submit').click(function() {
+        submitWord();
     });
 
     $('.action.back').click(function() {
         var letter = $stage.text().slice(-1);
-        for (var i = 0; i < NUM_TILES; i++) {
-            if ($('#tile' + i).text() === letter) {
-                $('#tile' + i).css('visibility', 'visible');
-                if ($stage.text().length == 1) {
-                    $stage.css('visibility', 'hidden');
-                    $stage.text('0');
-                } else {
-                    $stage.text($stage.text().slice(0, -1));
-                }
-                break;
-            }
+        var tile = getTileByLetter(letter, false);
+        if (tile) {
+            moveTile(tile, false);
         }
     });
 
@@ -168,6 +203,8 @@ $(function() {
 
     socket.on('start round', function(data) {
         console.log('round word: ' + data.word);
+        score = 0;
+        $score.text('Score: ' + score);
         matchList = data.matches;
         for (var i = 0; i < NUM_TILES; i++) {
             $('#tile' + i).text(data.word[i]);
