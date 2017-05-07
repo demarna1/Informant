@@ -64,4 +64,5 @@ ul {
 
 .tile {
     width: 15%;
+    position: relative;
 }

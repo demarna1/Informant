@@ -1,7 +1,4 @@
 $(function() {
-    // Constants
-    var NUM_TILES = 6;
-
     // Pages
     var $waitPage = $('.waitPage');
     var $readyPage = $('.readyPage');
@@ -31,6 +28,18 @@ $(function() {
         'orange': { 'primary': '#eeaa22', 'secondary': '#ffdd88' },
         'pink': { 'primary': '#ee7777', 'secondary': '#ffbbbb' }
     };
+
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
+    }
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1));
@@ -72,17 +81,18 @@ $(function() {
     }
 
     function getTileByLetter(letter, isVisible) {
-        for (var i = 0; i < NUM_TILES; i++) {
-            var tile = $('#tile' + i);
-            if (tile.text() === letter) {
-                var visibility = tile.css('visibility').toLowerCase();
+        var tile = null;
+        $('.tile').each(function() {
+            if ($(this).text() === letter) {
+                var visibility = $(this).css('visibility').toLowerCase();
                 if ((isVisible && visibility === 'visible') ||
                     (!isVisible && visibility === 'hidden')) {
-                    return tile;
+                    tile = $(this);
+                    return false; // break out of $.each
                 }
             }
-        }
-        return null;
+        });
+        return tile;
     }
 
     function moveTile(tile, toStage) {
@@ -105,7 +115,15 @@ $(function() {
         }
     }
 
-    function submitWord() {
+    function actionBack() {
+        var letter = $stage.text().slice(-1);
+        var tile = getTileByLetter(letter, false);
+        if (tile) {
+            moveTile(tile, false);
+        }
+    }
+
+    function actionSubmit() {
         var word = $stage.text();
         if (matchList.indexOf(word) > -1) {
             $('.btn').prop('disabled', true);
@@ -122,13 +140,15 @@ $(function() {
     });
 
     // Accept key presses on desktop
-    $(document).keypress(function(event) {
+    $(document).keydown(function(event) {
         var key = event.key.toUpperCase();
         var tile = getTileByLetter(key, true);
         if (tile) {
             moveTile(tile, true);
         } else if (key === 'ENTER') {
-            submitWord();
+            actionSubmit();
+        } else if (key === 'BACKSPACE') {
+            actionBack();
         }
     });
 
@@ -137,19 +157,42 @@ $(function() {
     });
 
     $('.action.submit').click(function() {
-        submitWord();
+        actionSubmit();
     });
 
     $('.action.back').click(function() {
-        var letter = $stage.text().slice(-1);
-        var tile = getTileByLetter(letter, false);
-        if (tile) {
-            moveTile(tile, false);
-        }
+        actionBack();
     });
 
-    $('action.mix').click(function() {
-        // TODO
+    $('.action.mix').click(function() {
+        var shuffledOffsets = [];
+        $('.tile').each(function(index) {
+            shuffledOffsets.push($(this).position().left);
+        });
+        shuffle(shuffledOffsets);
+        $('.btn').prop('disabled', true);
+        var sortedLetters = [];
+        $('.tile').each(function(index) {
+            sortedLetters.push({
+                letter: $(this).text(),
+                visibility: $(this).css('visibility'),
+                offset: shuffledOffsets[index]
+            });
+            $(this).animate({
+                left: shuffledOffsets[index] - $(this).position().left
+            }, 500);
+        });
+        sortedLetters.sort(function(a, b) {
+            return a.offset - b.offset; // ascending order
+        });
+        $(':animated').promise().done(function() {
+            $('.tile').css('left', '0px');
+            $('.tile').each(function(index) {
+                $(this).text(sortedLetters[index].letter);
+                $(this).css('visibility', sortedLetters[index].visibility);
+            });
+            $('.btn').prop('disabled', false);
+        });
     });
 
     $('.action.cancel').click(function() {
@@ -206,9 +249,9 @@ $(function() {
         score = 0;
         $score.text('Score: ' + score);
         matchList = data.matches;
-        for (var i = 0; i < NUM_TILES; i++) {
-            $('#tile' + i).text(data.word[i]);
-        }
+        $('.tile').each(function(index) {
+            $(this).text(data.word[index]);
+        });
         transitionTo($solvePage);
     });
 
