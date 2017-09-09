@@ -199,8 +199,14 @@ function animateRoundPage(callback) {
     title.scaleX = title.scaleY = titleScale;
     title.x = canvas.width/2 - (title.getBounds().width*titleScale)/2;
     title.y = canvas.height*0.08;
+    stage.addChild(title);
 
     var time = 5;
+    var text = new createjs.Text(time, '80px Eraser', getChalkColor('white'));
+    text.x = canvas.width/2 - text.getBounds().width/2;
+    text.y = canvas.height/2 - text.getBounds().height/2;
+    stage.addChild(text);
+
     createjs.Ticker.setFPS(1);
     createjs.Ticker.removeAllEventListeners();
     createjs.Ticker.addEventListener('tick', drawRoundCountdown);
@@ -213,12 +219,7 @@ function animateRoundPage(callback) {
         }
 
         // Update the countdown
-        stage.removeAllChildren();
-        var text = new createjs.Text(time, '80px Eraser', getChalkColor('white'));
-        text.x = canvas.width/2 - text.getBounds().width/2;
-        text.y = canvas.height/2 - text.getBounds().height/2;
-        stage.addChild(text);
-        stage.addChild(title);
+        text.text = time;
         stage.update();
         time -= 1;
         if (time < 0) {
@@ -234,6 +235,10 @@ function drawRoundWord() {
     text.scaleX = text.scaleY = textScale;
     text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
     text.y = canvas.height*0.06;
+    if (state.transition == 0) {
+        text.text = '';
+    }
+    stage.addChild(text);
 
     if (state.transition == 0) {
         state.transition = 1;
@@ -245,15 +250,12 @@ function drawRoundWord() {
                 playChalkSound(6);
             }
             text.text = state.roundWord.substr(0, state.transition);
-            stage.addChild(text);
             stage.update();
             state.transition += 1;
             if (state.transition > 6) {
                 event.remove();
             }
         }
-    } else if (state.transition > 6) {
-        stage.addChild(text);
     }
 }
 
@@ -287,9 +289,27 @@ function drawRoundMatches() {
     }
 }
 
+function drawRoundTimer() {
+/*
+        var timer = 0;
+        createjs.Ticker.setInterval(1000);
+        createjs.Ticker.addEventListener('tick', drawRoundTimer);
+        function drawRoundTimer() {
+            // Stop the timer if the state changed
+            if (state.screen !== ScreenEnum.ROUND) {
+                event.remove();
+                return;
+            }
+
+            // Update the timer
+        }
+*/
+}
+
 function drawRoundPage() {
     drawRoundWord();
     drawRoundMatches();
+    drawRoundTimer();
 }
 
 function update() {
