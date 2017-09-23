@@ -24,6 +24,17 @@ app.get('/informant', function(req, res) {
     }
 });
 
+// Configure Espy routes
+app.use(express.static(__dirname + '/espy/game'));
+app.use(express.static(__dirname + '/espy/play'));
+app.get('/espy', function(req, res) {
+    if (req.query.gameCode && req.query.name) {
+        res.sendFile(path.resolve('espy/play/espy_play.html');
+    } else {
+        res.sendFile(path.resolve('espy/game/espy_game.html');
+    }
+});
+
 // Configure Word Blitz routes
 app.use(express.static(__dirname + '/wordblitz/game'));
 app.use(express.static(__dirname + '/wordblitz/play'));
@@ -55,9 +66,11 @@ nodeServer.listen(nodePort, function() {
 // Create socket.io servers for each game
 var io = require('socket.io')(nodeServer);
 var infServer = require('./informant/inf_server.js');
+var espyServer = require('./espy/espy_server.js');
 var wbServer = require('./wordblitz/wb_server.js');
 var cahServer = require('./cah/cah_server.js');
 infServer.addListener(io);
+espyServer.addListener(io);
 wbServer.addListener(io);
 cahServer.addListener(io);
 
@@ -69,6 +82,11 @@ app.get('/play', function(req, res) {
         res.json({
             'result': 'success',
             'url': '/informant'
+        });
+    } else if (gameCode in espyServer.rooms) {
+        res.json({
+            'result': 'success',
+            'url': '/espy'
         });
     } else if (gameCode in wbServer.rooms) {
         res.json({
