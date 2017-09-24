@@ -53,13 +53,13 @@ exports.addListener = function(io) {
             if (socket.user) {
                 console.log('Espy player left room');
                 socket.broadcast.to(socket.gameid).emit('user left', {
-                    userid: socket.id;
+                    userid: socket.id
                 });
             } else {
                 console.log('Espy game host ' + socket.gameCode + ' disconnected');
                 delete exports.rooms[socket.gameCode];
                 socket.broadcast.to(socket.gameCode).emit('host left', {
-                    gameCode: socket.gameCode;
+                    gameCode: socket.gameCode
                 });
             }
         });

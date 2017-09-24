@@ -25,10 +25,10 @@ function loadGame(stateObj, callback) {
         x: canvas.width/2,
         y: canvas.height/2
     });
-    var barX = canvas.width/2 - 150;
-    var barY = canvas.height/2 - 40;
     var barWidth = 300;
     var barHeight = 80;
+    var barX = canvas.width/2 - barWidth/2;
+    var barY = canvas.height/2 - barHeight/2;
     var loadRect = new createjs.Shape();
     loadRect.graphics.beginFill('#ffffff');
     loadRect.graphics.drawRect(barX, barY, 0, barHeight);
@@ -40,6 +40,7 @@ function loadGame(stateObj, callback) {
     stage.addChild(progressText);
     stage.update();
 
+    // Sounds and images to load
     var queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound);
     queue.on('progress', handleProgress);

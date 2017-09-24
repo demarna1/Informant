@@ -29,9 +29,9 @@ app.use(express.static(__dirname + '/espy/game'));
 app.use(express.static(__dirname + '/espy/play'));
 app.get('/espy', function(req, res) {
     if (req.query.gameCode && req.query.name) {
-        res.sendFile(path.resolve('espy/play/espy_play.html');
+        res.sendFile(path.resolve('espy/play/espy_play.html'));
     } else {
-        res.sendFile(path.resolve('espy/game/espy_game.html');
+        res.sendFile(path.resolve('espy/game/espy_game.html'));
     }
 });
 
