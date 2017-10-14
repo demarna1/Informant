@@ -72,7 +72,53 @@ function loadGame(stateObj, callback) {
     }
 }
 
+function generateCloud() {
+    var cloud = new createjs.Container();
+    var circle1 = new createjs.Shape();
+    var circle2 = new createjs.Shape();
+    circle1.graphics.beginFill('#d8d8e0').drawCircle(-10, 0, 30);
+    circle2.graphics.beginFill('#d8d8e0').drawCircle(10, 0, 30);
+    cloud.addChild(circle1);
+    cloud.addChild(circle2);
+    return cloud;
+}
+
+function cloudComplete(cloud) {
+    cloud.x = 0;
+    createjs.Tween.get(cloud)
+        .to({alpha:1, x:canvas.width/10}, 6000)
+        .to({x:(9*canvas.width)/10}, 10000)
+        .to({alpha:0, x:canvas.width}, 6000)
+        .call(cloudComplete, cloud, this);
+}
+
+function drawClouds() {
+    var ys = [150, 350, 650, 450];
+    for (var i = 0; i < ys.length; i++) {
+        var cloud = generateCloud();
+        cloud.alpha = 0;
+        cloud.x = 0;
+        cloud.y = ys[i];
+        createjs.Tween.get(cloud)
+            .to({alpha:1, x:canvas.width/10}, 6000)
+            .to({x:(9*canvas.width)/10}, 5000)
+            .to({alpha:0, x:canvas.width}, 6000)
+            .call(function() {
+                cloud.x = 0;
+                createjs.Tween.get(cloud)
+                    .to({alpha:1, x:canvas.width/10}, 6000)
+                    .to({x:(9*canvas.width)/10}, 5000)
+                    .to({alpha:0, x:canvas.width}, 6000)
+                    .call(cloudComplete);
+            });
+        stage.addChild(cloud);
+    }
+}
+
 function update() {
     stage.removeAllChildren();
-    stage.update();
+    createjs.Ticker.removeAllEventListeners();
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", stage);
+    drawClouds();
 }
