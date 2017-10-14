@@ -112,11 +112,9 @@ function playChalkSound(numLetters) {
 
 function drawTitle() {
     var title = 'WORD BLITZ';
-    var text = new createjs.Text(title, '60px Eraser', getChalkColor('white'));
-    var textScale = (canvas.width*0.42)/text.getBounds().width;
-    text.scaleX = text.scaleY = textScale;
-    text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
-    text.y = canvas.height*0.08;
+    var text = new createjs.Text(title, '120px Eraser', getChalkColor('white'));
+    text.x = WIDTH/2 - text.getBounds().width/2;
+    text.y = HEIGHT*0.08;
 
     if (state.transition == 0) {
         state.transition = 1;
@@ -144,35 +142,23 @@ function drawTitle() {
 }
 
 function drawInfoBox() {
-    var label = 'game code:';
-    var labelText = new createjs.Text(label, '42px Eraser', getChalkColor('white'));
-    var textScale = (canvas.width*0.22)/labelText.getBounds().width;
-    labelText.scaleX = labelText.scaleY = textScale;
-    labelText.x = canvas.width/2 - (labelText.getBounds().width*textScale)/2;
-    labelText.y = canvas.height*0.30;
+    var labelText = new createjs.Text('game code:', '72px Eraser', getChalkColor('white'));
+    labelText.x = WIDTH/2 - labelText.getBounds().width/2;
+    labelText.y = HEIGHT*0.30;
     stage.addChild(labelText);
 
-    var code = state.gameCode;
-    var codeText = new createjs.Text(code, '60px Eraser', getChalkColor('yellow'));
-    codeText.scaleX = codeText.scaleY = textScale;
-    codeText.x = canvas.width/2 - (codeText.getBounds().width*textScale)/2;
-    codeText.y = labelText.y + labelText.getBounds().height*textScale;
+    var codeText = new createjs.Text(state.gameCode, '72px Eraser', getChalkColor('yellow'));
+    codeText.x = WIDTH/2 - codeText.getBounds().width/2;
+    codeText.y = labelText.y + labelText.getBounds().height;
     stage.addChild(codeText);
 }
 
 function drawPlayerNames() {
-    var sampleText = new createjs.Text('player', '42px Eraser');
-    var textScale = (canvas.width*0.15)/sampleText.getBounds().width;
-
     for (var i = 0; i < state.players.length; i++) {
         var player = state.players[i];
-
-        var text = new createjs.Text(player.username, '42px Eraser');
-        text.scaleX = text.scaleY = textScale;
-        text.x = canvas.width/2 + (canvas.width/6)*(i%2*2-1) -
-            (text.getBounds().width*textScale)/2;
-        text.y = canvas.height*0.60 + canvas.height*0.15*Math.floor(i/2);
-        text.color = getChalkColor(player.color);
+        var text = new createjs.Text(player.username, '72px Eraser', getChalkColor(player.color));
+        text.x = WIDTH/2 + (WIDTH/6)*(i%2*2-1) - text.getBounds().width/2;
+        text.y = HEIGHT*0.60 + HEIGHT*0.15*Math.floor(i/2);
         stage.addChild(text);
 
         if (player.dirty) {
@@ -203,17 +189,15 @@ function animateRoundPage(callback) {
     stage.removeAllChildren();
     state.screen = ScreenEnum.ROUND_TRANSITION;
 
-    var title = new createjs.Text('Get Ready!', '60px Eraser', getChalkColor('white'));
-    var titleScale = (canvas.width*0.42)/title.getBounds().width;
-    title.scaleX = title.scaleY = titleScale;
-    title.x = canvas.width/2 - (title.getBounds().width*titleScale)/2;
-    title.y = canvas.height*0.08;
+    var title = new createjs.Text('Get Ready!', '108px Eraser', getChalkColor('white'));
+    title.x = WIDTH/2 - title.getBounds().width/2;
+    title.y = HEIGHT/4 - title.getBounds().height/2;
     stage.addChild(title);
 
     var time = 5;
-    var text = new createjs.Text(time, '80px Eraser', getChalkColor('white'));
-    text.x = canvas.width/2 - text.getBounds().width/2;
-    text.y = canvas.height/2 - text.getBounds().height/2;
+    var text = new createjs.Text(time, '144px Eraser', getChalkColor('white'));
+    text.x = WIDTH/2 - text.getBounds().width/2;
+    text.y = HEIGHT/2 - text.getBounds().height/2;
     stage.addChild(text);
 
     createjs.Ticker.setFPS(1);
@@ -239,11 +223,9 @@ function animateRoundPage(callback) {
 }
 
 function drawRoundWord() {
-    var text = new createjs.Text(state.roundWord, '60px Eraser', getChalkColor('white'));
-    var textScale = (canvas.width*0.22)/text.getBounds().width;
-    text.scaleX = text.scaleY = textScale;
-    text.x = canvas.width/2 - (text.getBounds().width*textScale)/2;
-    text.y = canvas.height*0.06;
+    var text = new createjs.Text(state.roundWord, '120px Eraser', getChalkColor('white'));
+    text.x = WIDTH/2 - text.getBounds().width/2;
+    text.y = HEIGHT*0.06;
     if (state.transition == 0) {
         text.text = '';
     }
@@ -278,9 +260,9 @@ function drawRoundMatches() {
     }
 
     // Calculate column width, row height, and left margin
-    var sampleText = new createjs.Text('------', '36px Eraser');
-    var columnWidth = (canvas.width - 200)/6;
-    var rowHeight = canvas.height*(0.07 - 0.0075*(numRows - 6));
+    var sampleText = new createjs.Text('------', '60px Eraser');
+    var columnWidth = (WIDTH - 200)/6;
+    var rowHeight = HEIGHT*(0.07 - 0.0075*(numRows - 6));
     var marginLeft = 100 + (columnWidth/2)*(6-numColumns) +
         (columnWidth - sampleText.getBounds().width)/2;
 
@@ -291,9 +273,9 @@ function drawRoundMatches() {
         if (!match.solved) {
             word = word.replace(/[A-Z]/g, '-');
         }
-        var text = new createjs.Text(word, '36px Eraser', getChalkColor(match.color));
+        var text = new createjs.Text(word, '60px Eraser', getChalkColor(match.color));
         text.x = marginLeft + columnWidth*Math.floor(i/numRows);
-        text.y = canvas.height*0.23 + rowHeight*(i%numRows);
+        text.y = HEIGHT*0.23 + rowHeight*(i%numRows);
         stage.addChild(text);
     }
 }
