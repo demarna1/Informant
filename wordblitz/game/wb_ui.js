@@ -3,6 +3,10 @@ var canvas = null;
 var stage = null;
 var state = null;
 
+// Base dimensions of the game
+var WIDTH = 1920;
+var HEIGHT = 1200;
+
 // Load game assets
 function loadGame(stateObj, callback) {
     // Set initial state object reference
@@ -10,8 +14,8 @@ function loadGame(stateObj, callback) {
 
     // Set initial canvas dimensions
     canvas = document.getElementById('wbCanvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
     stage = new createjs.Stage('wbCanvas');
 
     // Progress bar initialization
@@ -22,13 +26,13 @@ function loadGame(stateObj, callback) {
         font: '26px Arial',
         textAlign: 'center',
         textBaseline: 'middle',
-        x: canvas.width/2,
-        y: canvas.height/2
+        x: WIDTH/2,
+        y: HEIGHT/2
     });
-    var barWidth = 300;
-    var barHeight = 80;
-    var barX = canvas.width/2 - barWidth/2;
-    var barY = canvas.height/2 - barHeight/2;
+    var barWidth = 200;
+    var barHeight = 50;
+    var barX = WIDTH/2 - barWidth/2;
+    var barY = HEIGHT/2 - barHeight/2;
     var loadRect = new createjs.Shape();
     loadRect.graphics.beginFill('#ffffff');
     loadRect.graphics.drawRect(barX, barY, 0, barHeight);
@@ -62,15 +66,19 @@ function loadGame(stateObj, callback) {
         // Set resize listener
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+        update();
 
         // Notify IO to start the game
         callback();
     }
 
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        update();
+        // Shrink or stretch to the smaller of the two ratios
+        var scaleToFitX = window.innerWidth / WIDTH;
+        var scaleToFitY = window.innerHeight / HEIGHT;
+        var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+        canvas.style.width = WIDTH * optimalRatio;
+        canvas.style.height = HEIGHT * optimalRatio;
     }
 }
 
