@@ -1,9 +1,10 @@
-// Root canvas element and stage
-var canvas = null;
+// Global objects
 var stage = null;
-
-// Cached state (for resizing events)
 var state = null;
+
+// Base dimensions of the game
+var WIDTH = 1920;
+var HEIGHT = 1200;
 
 // Game assets
 var informantLogo = null;
@@ -25,29 +26,45 @@ var colorFilters = {
     'brown': new createjs.ColorFilter(0, 0, 0, 1, 128, 80, 32, 0)
 };
 
+// Shrink or stretch to the smaller of the two ratios
+function resizeCanvas() {
+    var scaleToFitX = window.innerWidth / WIDTH;
+    var scaleToFitY = window.innerHeight / HEIGHT;
+    var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+    var canvas = document.getElementById('infCanvas');
+    canvas.style.width = WIDTH * optimalRatio;
+    canvas.style.height = HEIGHT * optimalRatio;
+}
+
 // Load game assets
-function loadGame(callback) {
-    // Set initial canvas dimensions
-    canvas = document.getElementById('infCanvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+function loadGame(stateObj, callback) {
+    // Set reference to state object
+    state = stateObj;
+
+    // Set the canvas dimensions and resize
+    var canvas = document.getElementById('infCanvas');
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    resizeCanvas();
+
+    // Set the stage
     stage = new createjs.Stage('infCanvas');
 
     // Progress bar initialization
     var progressText = new createjs.Text();
     progressText.set({
         text: '0% Loaded',
-        font: '26px Play',
         color: '#000000',
+        font: '26px Play',
         textAlign: 'center',
         textBaseline: 'middle',
-        x: canvas.width/2,
-        y: canvas.height/2
+        x: WIDTH/2,
+        y: HEIGHT/2
     });
-    var barX = canvas.width/2 - 150;
-    var barY = canvas.height/2 - 40;
     var barWidth = 300;
     var barHeight = 80;
+    var barX = WIDTH/2 - barWidth/2;
+    var barY = HEIGHT/2 - barHeight/2;
     var loadRect = new createjs.Shape();
     loadRect.graphics.beginFill('#c00000');
     loadRect.graphics.drawRect(barX, barY, 0, barHeight);
@@ -59,6 +76,7 @@ function loadGame(callback) {
     stage.addChild(progressText);
     stage.update();
 
+    // Sounds and images to load
     var queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound);
     queue.on('progress', handleProgress);
@@ -97,29 +115,24 @@ function loadGame(callback) {
         scissorsFrameOpen = queue.getResult('scissorsFrameOpen');
 
         // Set resize listener
-        state = new State('????');
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+        update();
 
         // Notify IO to start the game
         callback();
     }
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        draw();
-    }
 }
 
+/*
 function drawBackground(container) {
     var bg = new createjs.Bitmap(lobbyBackground);
     var filter = new createjs.ColorFilter(0.5, 0.5, 0.5, 1, 0, 0, 0, 0);
     var scale = 0.65;
     bg.scaleX = scale;
     bg.scaleY = scale;
-    for (var i = 0; i < canvas.width/(bg.image.width*scale); i++) {
-        for (var j = 0; j < canvas.height/(bg.image.height*scale); j++) {
+    for (var i = 0; i < WIDTH/(bg.image.width*scale); i++) {
+        for (var j = 0; j < HEIGHT/(bg.image.height*scale); j++) {
             var bgpiece = bg.clone();
             bgpiece.filters = [filter];
             bgpiece.cache(0, 0, bg.image.width, bg.image.height);
@@ -129,61 +142,60 @@ function drawBackground(container) {
         }
     }
 }
+*/
 
 function drawBomb(container) {
     var bomb = new createjs.Bitmap(lobbyBomb);
-    var padding = 40;
-    var scaleWidth = (canvas.width*0.4 - padding*2) / bomb.image.width;
-    var scaleHeight = (canvas.height*0.6 - padding*2) / bomb.image.height;
-    var scale = Math.min(scaleWidth, scaleHeight);
+    var scale = (HEIGHT*0.6) / bomb.image.height;
     bomb.scaleX = scale;
     bomb.scaleY = scale;
-    bomb.x = (canvas.width*0.4 - bomb.image.width*scale)/2;
-    bomb.y = (canvas.height*0.6 - bomb.image.height*scale)/2;
+    bomb.x = WIDTH*0.2 - (bomb.image.width*scale)/2;
+    bomb.y = 0;
     container.addChild(bomb);
 }
 
 function drawInfoBox(container) {
-    var padding = 20;
     var box = new createjs.Shape();
-    var boxX = canvas.width*0.4 + padding;
-    var boxY = padding;
-    var boxWidth = canvas.width*0.6 - padding*2;
-    var boxHeight = canvas.height*0.6 - padding;
+    var boxX = WIDTH*0.4 + 25;
+    var boxY = 25;
+    var boxWidth = WIDTH*0.6 - 25*2;
+    var boxHeight = HEIGHT*0.6 - 25;
     box.graphics.beginFill('black').drawRoundRect(boxX, boxY, boxWidth, boxHeight, 10);
     box.alpha = 0.3;
     box.shadow = new createjs.Shadow('#000000', -5, 3, 10);
     container.addChild(box);
 
     var logo = new createjs.Bitmap(informantLogo);
-    var scaleWidth = (boxWidth - padding*2) / logo.image.width;
-    var scaleHeight = (boxHeight/3 - padding*2) / logo.image.height;
-    var lScale = Math.min(scaleWidth, scaleHeight);
-    logo.scaleX = lScale;
-    logo.scaleY = lScale;
-    logo.x = (boxWidth - logo.image.width*lScale)/2 + boxX;
-    logo.y = (boxHeight/3 - logo.image.height*lScale)/2 + boxY;
+    var scale = (boxWidth - 50*2) / logo.image.width;
+    logo.scaleX = scale;
+    logo.scaleY = scale;
+    logo.x = boxX + 50;
+    logo.y = boxY + 25;
     container.addChild(logo);
+
+    var code = new createjs.Text();
+    code.set({
+        text: 'Room Code: ' + state.gameCode,
+        font: 'bold 56px Play',
+        color: '#ffA000',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        x: boxX + boxWidth/2,
+        y: boxY + boxHeight/2
+    });
+    container.addChild(code);
 
     var info = new createjs.Text();
     info.set({
         text: 'Join on your mobile device at\nwww.noahd.com',
-        font: '26px Play',
+        font: '40px Play',
         color: '#dcdcdc',
         textAlign: 'center',
         textBaseline: 'middle',
-        x: boxWidth/2 + boxX,
-        y: (boxHeight/3)/2 + boxY + (boxHeight*2)/3
+        x: boxX + boxWidth/2,
+        y: boxY + boxHeight*0.75
     });
     container.addChild(info);
-
-    var code = new createjs.Text('Room Code: ' + state.gameCode, 'bold 26px Play', '#ffA000');
-    var cScale = (canvas.width*0.6)/(code.getBounds().width*2.5);
-    code.scaleX = cScale;
-    code.scaleY = cScale;
-    code.x = canvas.width*0.7 - (code.getBounds().width*cScale)/2;
-    code.y = canvas.height*0.3 - (code.getBounds().height*cScale)/2 + padding/10;
-    container.addChild(code);
 }
 
 function editPlayerBubble(bubble, radius, player) {
@@ -264,10 +276,10 @@ function drawBubbles(container) {
 
 function drawLobbyPage() {
     lobbyContainer = new createjs.Container();
-    drawBackground(lobbyContainer);
+    //drawBackground(lobbyContainer);
     drawBomb(lobbyContainer);
     drawInfoBox(lobbyContainer);
-    drawBubbles(lobbyContainer);
+    //drawBubbles(lobbyContainer);
     stage.addChild(lobbyContainer);
 }
 
@@ -306,15 +318,12 @@ function playJoinSound(userid) {
     createjs.Sound.play(state.getUser(userid).sound);
 }
 
-function draw() {
+function update() {
     stage.removeAllChildren();
-    if (state.screen == ScreenEnum.LOBBY) {
-        drawLobbyPage();
+    switch (state.screen) {
+        case ScreenEnum.LOBBY:
+            drawLobbyPage();
+            break;
     }
     stage.update();
-}
-
-function update(newState) {
-    state = newState;
-    draw();
 }

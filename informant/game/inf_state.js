@@ -19,8 +19,8 @@ function shuffle(array) {
     return array;
 }
 
-function State(gameCode) {
-    this.gameCode = gameCode;
+function State() {
+    this.gameCode = '????';
     this.screen = ScreenEnum.LOBBY;
     this.players = [];
     this.misRate = 0;

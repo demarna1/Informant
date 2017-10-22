@@ -1,24 +1,24 @@
 $(function() {
     var socket = io('/informant');
-    var state = null;
+    var state = new State();
 
     socket.on('connect', function() {
-        loadGame(function() {
+        loadGame(state, function() {
             socket.emit('new game');
         });
     });
 
     socket.on('code created', function(data) {
         console.log('new game code = ' + data.gameCode);
-        state = new State(data.gameCode);
-        update(state);
+        state.gameCode = data.gameCode;
+        update();
         //playLobbyMusic(true);
     });
 
     socket.on('user joined', function(data) {
         if (state.players.length < 8) {
             state.addUser(data.userid, data.username);
-            update(state);
+            update();
             playJoinSound(data.userid);
             socket.emit('update players', {
                 players: state.players
@@ -32,7 +32,7 @@ $(function() {
 
     socket.on('user left', function(data) {
         state.removeUser(data.userid);
-        update(state);
+        update();
         if (state.players.length > 0) {
             socket.emit('update players', {
                 players: state.players
@@ -44,7 +44,7 @@ $(function() {
         //playLobbyMusic(false);
         animateLobbyPage(function() {
             state.startGame();
-            update(state);
+            update();
             socket.emit('assign roles', {
             });
         });

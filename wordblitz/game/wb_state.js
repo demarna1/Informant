@@ -4,7 +4,6 @@ ScreenEnum = {
     ROUND: 2
 }
 
-
 function State() {
     this.gameCode = '????';
     this.screen = ScreenEnum.LOBBY;

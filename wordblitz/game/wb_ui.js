@@ -1,5 +1,4 @@
-// Root canvas element and stage
-var canvas = null;
+// Global objects
 var stage = null;
 var state = null;
 
@@ -7,15 +6,28 @@ var state = null;
 var WIDTH = 1920;
 var HEIGHT = 1200;
 
+// Shrink or stretch to the smaller of the two ratios
+function resizeCanvas() {
+    var scaleToFitX = window.innerWidth / WIDTH;
+    var scaleToFitY = window.innerHeight / HEIGHT;
+    var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+    var canvas = document.getElementById('wbCanvas');
+    canvas.style.width = WIDTH * optimalRatio;
+    canvas.style.height = HEIGHT * optimalRatio;
+}
+
 // Load game assets
 function loadGame(stateObj, callback) {
-    // Set initial state object reference
+    // Set reference to state object
     state = stateObj;
 
-    // Set initial canvas dimensions
-    canvas = document.getElementById('wbCanvas');
+    // Set the canvas dimensions and resize
+    var canvas = document.getElementById('wbCanvas');
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
+    resizeCanvas();
+
+    // Set the stage
     stage = new createjs.Stage('wbCanvas');
 
     // Progress bar initialization
@@ -55,6 +67,7 @@ function loadGame(stateObj, callback) {
         { id: 'chalk-5to6-letters', src: '/sound/chalk-5to6-letters.mp3' }
     ]);
 
+    // Update progress bar
     function handleProgress() {
         progressText.text = (queue.progress*100|0) + '% Loaded';
         loadRect.graphics.clear().beginFill('#ffffff');
@@ -70,15 +83,6 @@ function loadGame(stateObj, callback) {
 
         // Notify IO to start the game
         callback();
-    }
-
-    function resizeCanvas() {
-        // Shrink or stretch to the smaller of the two ratios
-        var scaleToFitX = window.innerWidth / WIDTH;
-        var scaleToFitY = window.innerHeight / HEIGHT;
-        var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
-        canvas.style.width = WIDTH * optimalRatio;
-        canvas.style.height = HEIGHT * optimalRatio;
     }
 }
 
