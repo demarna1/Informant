@@ -202,7 +202,7 @@ function editPlayerBubble(bubble, radius, player) {
     // Assets to add
     var frame = new createjs.Bitmap(scissorsFrameOpen);
     var scissors = new createjs.Bitmap(scissorsColorOpen);
-    var playerText = new createjs.Text(player.username, 'bold 26px Play', '#000000');
+    var playerText = new createjs.Text(player.username, 'bold 40px Play', '#000000');
 
     // Position and scale calculations
     var s = radius / Math.sqrt(2);
@@ -237,9 +237,9 @@ function editPlayerBubble(bubble, radius, player) {
 
 function drawBubbles(container) {
     var numBubbles = Math.min(Math.max(4, state.players.length+1), 8);
-    var padding = Math.floor(canvas.width/(numBubbles*6));
-    var blockWidth = (canvas.width - 2*padding)/numBubbles;
-    var radius = Math.min(canvas.height*0.4 - 2*padding, blockWidth - 2*padding)/2;
+    var padding = Math.floor(WIDTH/(numBubbles*6));
+    var blockWidth = (WIDTH - 2*padding)/numBubbles;
+    var radius = Math.min(HEIGHT*0.4 - 2*padding, blockWidth - 2*padding)/2;
 
     // A player has joined this bubble slot
     var playerBubble = new createjs.Container();
@@ -254,7 +254,7 @@ function drawBubbles(container) {
     joinCircle.graphics.setStrokeDash([6,4]);
     joinCircle.graphics.setStrokeStyle(2).beginStroke('white').drawCircle(0, 0, radius);
     joinBubble.addChild(joinCircle);
-    var joinText = new createjs.Text('join', '26px Play', '#ffffff');
+    var joinText = new createjs.Text('join', '40px Play', '#ffffff');
     var bounds = joinText.getBounds();
     joinText.x = -bounds.width/2;
     joinText.y = -bounds.height/2;
@@ -269,7 +269,7 @@ function drawBubbles(container) {
             bubble = joinBubble.clone(true);
         }
         bubble.x = padding + blockWidth*i + blockWidth/2;
-        bubble.y = 0.8*canvas.height;
+        bubble.y = 0.8*HEIGHT;
         container.addChild(bubble);
     }
 }
@@ -279,15 +279,15 @@ function drawLobbyPage() {
     //drawBackground(lobbyContainer);
     drawBomb(lobbyContainer);
     drawInfoBox(lobbyContainer);
-    //drawBubbles(lobbyContainer);
+    drawBubbles(lobbyContainer);
     stage.addChild(lobbyContainer);
 }
 
 function animateLobbyPage(callback) {
-    lobbyContainer.x = canvas.width*0.20;
-    lobbyContainer.y = canvas.height*0.25;
-    lobbyContainer.regX = canvas.width*0.20;
-    lobbyContainer.regY = canvas.height*0.25;
+    lobbyContainer.x = WIDTH*0.20;
+    lobbyContainer.y = HEIGHT*0.25;
+    lobbyContainer.regX = WIDTH*0.20;
+    lobbyContainer.regY = HEIGHT*0.25;
     var time = 0;
     createjs.Ticker.setFPS(30);
     createjs.Ticker.removeAllEventListeners();
