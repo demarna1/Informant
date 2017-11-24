@@ -1,17 +1,33 @@
-// Root canvas element and stage
-var canvas = null;
+// Global objects
 var stage = null;
 var state = null;
 
+// Base dimensions of the game
+var WIDTH = 1920;
+var HEIGHT = 1200;
+
+// Shrink or stretch to the smaller of the two ratios
+function resizeCanvas() {
+    var scaleToFitX = window.innerWidth / WIDTH;
+    var scaleToFitY = window.innerHeight / HEIGHT;
+    var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+    var canvas = document.getElementById('espyCanvas');
+    canvas.style.width = WIDTH * optimalRatio;
+    canvas.style.height = HEIGHT * optimalRatio;
+}
+
 // Load game assets
 function loadGame(stateObj, callback) {
-    // Set initial state object reference
+    // Set reference to state object
     state = stateObj;
 
-    // Set initial canvas dimensions
-    canvas = document.getElementById('espyCanvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Set canvas dimensions and resize
+    var canvas = document.getElementById('espyCanvas');
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    resizeCanvas();
+
+    // Set the stage
     stage = new createjs.Stage('espyCanvas');
 
     // Progress bar initialization
@@ -22,13 +38,13 @@ function loadGame(stateObj, callback) {
         font: '26px Arial',
         textAlign: 'center',
         textBaseline: 'middle',
-        x: canvas.width/2,
-        y: canvas.height/2
+        x: WIDTH/2,
+        y: HEIGHT/2
     });
     var barWidth = 300;
     var barHeight = 80;
-    var barX = canvas.width/2 - barWidth/2;
-    var barY = canvas.height/2 - barHeight/2;
+    var barX = WIDTH/2 - barWidth/2;
+    var barY = HEIGHT/2 - barHeight/2;
     var loadRect = new createjs.Shape();
     loadRect.graphics.beginFill('#ffffff');
     loadRect.graphics.drawRect(barX, barY, 0, barHeight);
@@ -60,58 +76,47 @@ function loadGame(stateObj, callback) {
         // Set resize listener
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+        update();
 
         // Notify IO to start the game
         callback();
     }
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        update();
-    }
 }
 
 function generateCloud() {
-    var cloud = new createjs.Container();
-    var circle1 = new createjs.Shape();
-    var circle2 = new createjs.Shape();
-    circle1.graphics.beginFill('#d8d8e0').drawCircle(-10, 0, 30);
-    circle2.graphics.beginFill('#d8d8e0').drawCircle(10, 0, 30);
-    cloud.addChild(circle1);
-    cloud.addChild(circle2);
+    var cloud = new createjs.Shape();
+    cloud.graphics.beginFill('#d8d8e0').beginStroke('#a0a0a0');
+    cloud.graphics.moveTo(-150, 75).lineTo(150, 75);
+    cloud.graphics.bezierCurveTo(230, 75, 230, -10, 150, -10);
+    cloud.graphics.bezierCurveTo(150, -70, 70, -70, 70, -70);
+    cloud.graphics.bezierCurveTo(70, -140, -110, -140, -110, -50);
+    cloud.graphics.bezierCurveTo(-220, -50, -220, 75, -150, 75);
     return cloud;
 }
 
-function cloudComplete(cloud) {
-    cloud.x = 0;
-    createjs.Tween.get(cloud)
-        .to({alpha:1, x:canvas.width/10}, 6000)
-        .to({x:(9*canvas.width)/10}, 10000)
-        .to({alpha:0, x:canvas.width}, 6000)
-        .call(cloudComplete, cloud, this);
+function tweenCloud(cloud) {
+    var x = Math.random()*WIDTH - 400;
+    var y = Math.random()*(HEIGHT-250) + 125;
+    var step = WIDTH/20 + y/3;
+    console.log('step of y=' + y + ' is ' + step);
+    cloud.x = x;
+    cloud.y = y;
+    createjs.Tween.get(cloud, {loop: false})
+        .wait(Math.random()*30000)
+        .to({alpha:1, x:x+step}, 10000)
+        .to({x:x+step*2}, 10000)
+        .to({alpha:0, x:x+step*3}, 10000)
+        .call(tweenCloud, [cloud]);
 }
 
 function drawClouds() {
-    var ys = [150, 350, 650, 450];
-    for (var i = 0; i < ys.length; i++) {
+    for (var i = 0; i < 10; i++) {
         var cloud = generateCloud();
         cloud.alpha = 0;
-        cloud.x = 0;
-        cloud.y = ys[i];
-        createjs.Tween.get(cloud)
-            .to({alpha:1, x:canvas.width/10}, 6000)
-            .to({x:(9*canvas.width)/10}, 5000)
-            .to({alpha:0, x:canvas.width}, 6000)
-            .call(function() {
-                cloud.x = 0;
-                createjs.Tween.get(cloud)
-                    .to({alpha:1, x:canvas.width/10}, 6000)
-                    .to({x:(9*canvas.width)/10}, 5000)
-                    .to({alpha:0, x:canvas.width}, 6000)
-                    .call(cloudComplete);
-            });
+        cloud.x = Math.random() * (WIDTH-50) + 25;
+        cloud.y = Math.random() * (HEIGHT-50) + 25;
         stage.addChild(cloud);
+        tweenCloud(cloud);
     }
 }
 
