@@ -6,6 +6,9 @@ var state = null;
 var WIDTH = 1920;
 var HEIGHT = 1200;
 
+// Game assets
+var airplaneImage = null;
+
 // Shrink or stretch to the smaller of the two ratios
 function resizeCanvas() {
     var scaleToFitX = window.innerWidth / WIDTH;
@@ -62,7 +65,7 @@ function loadGame(stateObj, callback) {
     queue.on('progress', handleProgress);
     queue.on('complete', handleComplete);
     queue.loadManifest([
-        { id: 'splish', src: '/sound/splish.mp3' }
+        { id: 'airplane', src:'/img/airplane.png' },
     ]);
 
     function handleProgress() {
@@ -73,6 +76,9 @@ function loadGame(stateObj, callback) {
     }
 
     function handleComplete() {
+        // Get image handles and create bitmaps
+        airplaneImage = queue.getResult('airplane');
+
         // Set resize listener
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -85,7 +91,7 @@ function loadGame(stateObj, callback) {
 
 function generateCloud() {
     var cloud = new createjs.Shape();
-    cloud.graphics.beginFill('#d8d8e0').beginStroke('#a0a0a0');
+    cloud.graphics.beginFill('#e0e0e4').beginStroke('#a0a0a0');
     cloud.graphics.moveTo(-150, 75).lineTo(150, 75);
     cloud.graphics.bezierCurveTo(230, 75, 230, -10, 150, -10);
     cloud.graphics.bezierCurveTo(150, -70, 70, -70, 70, -70);
@@ -98,7 +104,6 @@ function tweenCloud(cloud) {
     var x = Math.random()*WIDTH - 400;
     var y = Math.random()*(HEIGHT-250) + 125;
     var step = WIDTH/20 + y/3;
-    console.log('step of y=' + y + ' is ' + step);
     cloud.x = x;
     cloud.y = y;
     createjs.Tween.get(cloud, {loop: false})
@@ -120,10 +125,49 @@ function drawClouds() {
     }
 }
 
+function drawBanner() {
+    var banner = new createjs.Container();
+
+    // Plane
+    var airplane = new createjs.Bitmap(airplaneImage);
+    airplane.scaleX = 0.7;
+    airplane.scaleY = 0.7;
+    airplane.x = 0;
+    airplane.y = 0;
+    banner.addChild(airplane);
+
+    // Banner paper
+    var paper = new createjs.Shape();
+    paper.graphics.beginFill('#ffffff');
+    paper.graphics.drawRect(-550, 29, 550, 126);
+    banner.addChild(paper);
+
+    // Banner text
+    var text = new createjs.Text();
+    text.set({
+        text: 'Game Code: ' + state.gameCode,
+        font: '48px Copperplate',
+        color: '#000000'
+    });
+    text.x = -275 - text.getBounds().width/2,
+    text.y = 97 - text.getBounds().height/2;
+    banner.addChild(text);
+
+    banner.x = 0;
+    banner.y = 200;
+    createjs.Tween.get(banner, {loop: false})
+        .to({x:1200}, 6000, createjs.Ease.cubicOut);
+    createjs.Tween.get(banner, {loop: true})
+        .to({y:250}, 3000, createjs.Ease.sinInOut)
+        .to({y:200}, 3000, createjs.Ease.sinInOut);
+    stage.addChild(banner);
+}
+
 function update() {
     stage.removeAllChildren();
     createjs.Ticker.removeAllEventListeners();
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", stage);
     drawClouds();
+    drawBanner();
 }
